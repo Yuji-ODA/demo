@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith({SpringExtension.class})
 @WebMvcTest(controllers = HogeController.class)
-@WithMockUser
+@WithMockUser("spring")
 class HogeControllerTest {
 
     @Autowired
