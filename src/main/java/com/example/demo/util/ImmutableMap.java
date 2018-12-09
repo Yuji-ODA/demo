@@ -28,7 +28,7 @@ public abstract class ImmutableMap {
 
     private static <K, V> Map<K, V> umap(Pair<K, V>... pairs) {
         return Collections.unmodifiableMap(
-                Arrays.stream(pairs).collect(Collectors.toMap(Pair::getFirst, Pair::getSecond)));
+                Arrays.stream(pairs).collect(Collectors.toMap(Pair::getFirst, Pair::getSecond, (prev, next) -> next)));
     }
 
     @Value(staticConstructor = "of")
