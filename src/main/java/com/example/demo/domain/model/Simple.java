@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 public class Simple implements Serializable {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
     @Column(nullable = false)
