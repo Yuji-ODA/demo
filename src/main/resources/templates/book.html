@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>user form example</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<form action="#" th:action="@{/book}" th:object="${bookForm}" method="post" enctype="multipart/form-data">
+		<table>
+			<tr>
+				<td>Name:</td>
+				<td><input type="text" th:field="*{name}" /></td>
+				<td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">name error message</td>
+			</tr>
+			<tr>
+				<td>File:</td>
+        		<td><input type="number" step="0.1" th:field="*{price}" /></td>
+          		<td th:if="${#fields.hasErrors('price')}" th:errors="*{price}">price error messame</td>
+			<tr>
+				<td><button type="submit">Submit post</button></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
