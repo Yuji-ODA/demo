@@ -1,4 +1,8 @@
 server:
   port: 8080
 
+security:
+  user:
+    name: spring
+    password: secret
 
