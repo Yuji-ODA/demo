@@ -1,6 +1,9 @@
 package com.example.demo.app;
 
 import com.example.demo.app.form.BookForm;
+import com.example.demo.domain.service.BookService;
+import com.example.demo.domain.service.command.BookCommand;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +19,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping(path = "/book")
+@RequiredArgsConstructor
 public class BookController {
+
+    private final BookService bookService;
+
     private String getUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated())
@@ -36,8 +43,6 @@ public class BookController {
 
     @GetMapping(path = "")
     public String book(Authentication authentication, BookForm bookForm, Model model) {
-        System.out.println(authentication == null);
-        System.out.println(getUsername());
         return "book";
     }
 
@@ -46,6 +51,8 @@ public class BookController {
         if (bindingResult.hasErrors()) {
             return new ModelAndView("book", HttpStatus.BAD_REQUEST);
         }
+
+        bookService.run(BookCommand.fromBookForm(bookForm));
 
         return new ModelAndView("book");
     }
