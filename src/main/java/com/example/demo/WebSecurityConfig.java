@@ -11,11 +11,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // 認可の設定
         http
+                .csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/console", "/console/**").permitAll()
+                    .antMatchers("/console/**").permitAll()
                     .anyRequest().authenticated()  // それ以外は全て認証無しの場合アクセス不許可
                 .and()
                     .formLogin()
+                .and()
+                .headers().frameOptions().disable()
         ;
     }
 }

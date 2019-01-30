@@ -1,8 +1,18 @@
 server:
   port: 8080
 
-security:
-  user:
-    name: spring
-    password: secret
+spring:
+  security:
+    user:
+      name: spring
+      password: secret
+
+
+preference:
+  top-page:
+    list-length: 10
+    checkd: true
+  detail-page:
+    list-length: 5
+    checked: false
 
