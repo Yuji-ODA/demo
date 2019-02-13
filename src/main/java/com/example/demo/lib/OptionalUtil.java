@@ -9,11 +9,7 @@ public abstract class OptionalUtil {
         if (0 < args.length) {
             Optional<Integer> head = args[0];
             Optional<Integer>[] tail = tail(args);
-            return head.flatMap(x -> {
-                return sumOptInt(tail).flatMap(y -> {
-                    return Optional.of(x + y);
-                });
-            });
+            return head.flatMap(x -> sumOptInt(tail).flatMap(y -> Optional.of(x + y)));
         }
 
         return Optional.of(0);
