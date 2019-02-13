@@ -1,4 +1,4 @@
-package com.example.demo.util;
+package com.example.demo.lib;
 
 import lombok.Value;
 import org.springframework.lang.NonNull;

@@ -6,15 +6,11 @@ import java.util.Optional;
 public abstract class OptionalUtil {
 
     public static Optional<Integer> sumOptInt(Optional<Integer>... args) {
-        return sumOptIntArray(args);
-    }
-
-    public static Optional<Integer> sumOptIntArray(Optional<Integer>[] args) {
         if (0 < args.length) {
             Optional<Integer> head = args[0];
             Optional<Integer>[] tail = tail(args);
             return head.flatMap(x -> {
-                return sumOptIntArray(tail).flatMap(y -> {
+                return sumOptInt(tail).flatMap(y -> {
                     return Optional.of(x + y);
                 });
             });
@@ -22,6 +18,11 @@ public abstract class OptionalUtil {
 
         return Optional.of(0);
     }
+
+    public static Optional<Integer> sumOptIntReduce(Optional<Integer>... args) {
+        return Arrays.stream(args).reduce(Optional.of(0), (s,x) -> s.flatMap(a -> x.flatMap(b -> Optional.of(a + b))));
+    }
+
 
     public static <T> T[] tail(T[] array) {
         if (array.length == 0) {
