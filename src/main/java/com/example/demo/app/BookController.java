@@ -1,5 +1,6 @@
 package com.example.demo.app;
 
+import com.example.demo.GenericClass;
 import com.example.demo.Preference;
 import com.example.demo.app.form.BookForm;
 import com.example.demo.domain.service.BookService;
@@ -30,6 +31,8 @@ public class BookController {
     private final BookService bookService;
 
     private final Preference preference;
+
+    private final GenericClass<String> stringGenericClass;
 
     private String getUsername(WebRequest webRequest) {
         Principal principal = webRequest.getUserPrincipal();

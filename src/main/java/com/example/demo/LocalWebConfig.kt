@@ -16,4 +16,8 @@ open class LocalWebConfig {
         registrationBean.addUrlMappings("/console/*")
         return registrationBean
     }
+
+    @Bean
+    internal open fun loadClass(): Class<String> = String::class.java
+
 }
