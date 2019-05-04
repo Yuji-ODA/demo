@@ -5,8 +5,9 @@ import com.example.demo.Preference;
 import com.example.demo.app.form.BookForm;
 import com.example.demo.domain.service.BookService;
 import com.example.demo.domain.service.command.BookCommand;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -25,14 +26,14 @@ import java.security.Principal;
 @Controller
 @RequestMapping(path = "/book")
 @RequiredArgsConstructor
-@EnableConfigurationProperties(Preference.class)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BookController {
 
-    private final BookService bookService;
+    BookService bookService;
 
-    private final Preference preference;
+    Preference preference;
 
-    private final GenericClass<String> stringGenericClass;
+    GenericClass<String> stringGenericClass;
 
     private String getUsername(WebRequest webRequest) {
         Principal principal = webRequest.getUserPrincipal();
