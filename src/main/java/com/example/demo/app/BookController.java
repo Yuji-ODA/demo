@@ -55,6 +55,7 @@ public class BookController {
     @GetMapping(path = "")
     public String book(Authentication authentication, BookForm bookForm, Model model) {
         System.out.println(preference.getTopPage().getListLength());
+        model.addAttribute("hoge", "<div>DIV</div>");
         return "book";
     }
 

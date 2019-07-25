@@ -5,6 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
+	<th:block th:utext="${hoge}" />
 	<form action="#" th:action="@{/book}" th:object="${bookForm}" method="post" enctype="multipart/form-data">
 		<table>
 			<tr>
