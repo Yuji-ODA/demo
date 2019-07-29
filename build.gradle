@@ -30,6 +30,9 @@ targetCompatibility = 11
 
 repositories {
 	mavenCentral()
+    maven {
+        url "http://maven.codelibs.org"
+    }
 }
 
 
@@ -41,6 +44,7 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-jdbc')
 	implementation('com.h2database:h2')
 	implementation('mysql:mysql-connector-java')
+    implementation('org.codelibs:lucene-analyzers-kuromoji-ipadic-neologd:8.0.0-20190722')
     testImplementation('org.springframework.security:spring-security-test')
 	testCompile('org.springframework.boot:spring-boot-starter-test') {
        exclude module: 'junit'

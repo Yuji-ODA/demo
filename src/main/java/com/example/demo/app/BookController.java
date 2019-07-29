@@ -8,6 +8,8 @@ import com.example.demo.domain.service.command.BookCommand;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.codelibs.neologd.ipadic.lucene.analysis.ja.JapaneseTokenizer;
+import org.codelibs.neologd.ipadic.lucene.analysis.ja.dict.UserDictionary;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -54,6 +56,8 @@ public class BookController {
 
     @GetMapping(path = "")
     public String book(Authentication authentication, BookForm bookForm, Model model) {
+        UserDictionary userDict = null;
+        JapaneseTokenizer.Mode mode = JapaneseTokenizer.Mode.NORMAL;
         System.out.println(preference.getTopPage().getListLength());
         model.addAttribute("hoge", "<div>DIV</div>");
         return "book";
