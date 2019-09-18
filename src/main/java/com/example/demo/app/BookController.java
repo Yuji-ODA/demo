@@ -1,11 +1,12 @@
 package com.example.demo.app;
 
-import com.example.demo.GenericClass;
 import com.example.demo.Preference;
 import com.example.demo.app.form.BookForm;
 import com.example.demo.domain.service.BookService;
 import com.example.demo.domain.service.command.BookCommand;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.codelibs.neologd.ipadic.lucene.analysis.ja.JapaneseTokenizer;
@@ -35,7 +36,7 @@ public class BookController {
 
     Preference preference;
 
-    GenericClass<String> stringGenericClass;
+    ObjectMapper objectMapper;
 
     private String getUsername(WebRequest webRequest) {
         Principal principal = webRequest.getUserPrincipal();
@@ -54,8 +55,20 @@ public class BookController {
         return bookForm;
     }
 
+    @Data
+    static class Hoge {
+        private Float huga;
+    }
+
+
     @GetMapping(path = "")
     public String book(Authentication authentication, BookForm bookForm, Model model) {
+        try {
+            Hoge hoge = objectMapper.readValue("{\"huga\": \"1.25\"}}", Hoge.class);
+            System.out.println(hoge);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         UserDictionary userDict = null;
         JapaneseTokenizer.Mode mode = JapaneseTokenizer.Mode.NORMAL;
         System.out.println(preference.getTopPage().getListLength());
