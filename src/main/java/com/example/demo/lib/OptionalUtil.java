@@ -9,14 +9,14 @@ public abstract class OptionalUtil {
         if (0 < args.length) {
             Optional<Integer> head = args[0];
             Optional<Integer>[] tail = tail(args);
-            return head.flatMap(x -> sumOptInt(tail).flatMap(y -> Optional.of(x + y)));
+            return head.flatMap(x -> sumOptInt(tail).map(y -> x + y));
         }
 
         return Optional.of(0);
     }
 
     public static Optional<Integer> sumOptIntReduce(Optional<Integer>... args) {
-        return Arrays.stream(args).reduce(Optional.of(0), (s,x) -> s.flatMap(a -> x.flatMap(b -> Optional.of(a + b))));
+        return Arrays.stream(args).reduce(Optional.of(0), (s,x) -> s.flatMap(a -> x.map(b -> a + b)));
     }
 
 
