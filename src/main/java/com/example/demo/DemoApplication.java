@@ -1,52 +1,96 @@
 package com.example.demo;
 
-import lombok.val;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 @SpringBootApplication
 public class DemoApplication {
 
 	public static void main(String[] args) throws Exception {
 
-		Optional<String> x = Optional.of("X");
-//        Optional<String> x = Optional.empty();
-//        Optional<String> y = Optional.of("Y");
-		Optional<String> y = Optional.empty();
-		Optional<String> z = Optional.of("Z");
-//        Optional<String> z = Optional.empty();
+		Option<Integer> huga = unit(10);
 
-		val zyExist = x.<Function<String, Function<String, Supplier<String>>>>map(
-				a1 -> a2 -> a3 -> () -> String.join(" and ", a1, a2, a3)
-		).orElse(
-				a1 -> a2 -> () -> String.join(" and ", a1, a2)
-		);
+		Option<Integer> foo = huga.map(i -> i * 2);
 
-		val z_Exist = x.<Function<String, Supplier<String>>>map(
-				a1 -> a2 -> () -> String.join(" and ", a1, a2)
-		).orElse(
-				a1 -> () -> a1
-		);
+		System.out.println(foo);
 
-		val _yExist = x.<Function<String, Supplier<String>>>map(
-				a1 -> a2 -> () -> String.join(" and ", a1, a2)
-		).orElse(
-				a1 -> () -> a1
-		);
+//		SpringApplication.run(DemoApplication.class, args);
+	}
 
-		val __Exist = x.<Supplier<String>>map(
-				a1 -> () -> a1
-		).orElse(
-				() -> "none"
-		);
+	interface BaseMonad<T, S extends Monad<T>> {
+		S unit(T value);
+	}
 
-		String result = z.map(y.map(zyExist).orElse(z_Exist)).orElse(y.map(_yExist).orElse(__Exist)).get();
+	interface Monad<T> extends BaseMonad<T, Monad<T>> {
+		<R> Monad<? extends R> bind(Function<? super T, ? extends Monad<? extends R>> op);
+	}
 
-		System.out.println(result);
-		SpringApplication.run(DemoApplication.class, args);
+	public static <T> Option<T> unit(T t) {
+		return t == null ? Option.Nothing.instance() : new Option.Some<>(t);
+	}
+
+	public interface Option<T> {
+		<R> Option<R> unit(R r);
+		<R> Option<R> bind(Function<? super T, ? extends Option<R>> op);
+		<R> Option<R> map(Function<? super T, ? extends R> op);
+
+		class Some<T> implements Option<T> {
+
+			private final T t;
+
+			public Some(T t) {
+				this.t = t;
+			}
+
+			@Override
+			public <R> Option<R> unit(R r) {
+				return new Some<>(r);
+			}
+
+			@Override
+			public <R> Option<R> bind(Function<? super T, ? extends Option<R>> op) {
+				return op.apply(t);
+			}
+
+			@Override
+			public <R> Option<R> map(Function<? super T, ? extends R> op) {
+				return unit(op.apply(t));
+			}
+		}
+
+		class Nothing<T> implements Option<T> {
+
+			private static Nothing<?> _instance;
+
+			private Nothing() {}
+
+			public static <T> Nothing<T> instance() {
+				if (_instance == null) {
+					_instance = new Nothing<>();
+				}
+
+				//noinspection unchecked
+				return (Nothing<T>)_instance;
+			}
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public <R> Option<R> unit(R r) {
+				return (Option<R>)this;
+			}
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public <R> Option<R> bind(Function<? super T, ? extends Option<R>> op) {
+				return (Nothing<R>)this;
+			}
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public <R> Option<R> map(Function<? super T, ? extends R> op) {
+				return (Nothing<R>)this;
+			}
+		}
 	}
 }
