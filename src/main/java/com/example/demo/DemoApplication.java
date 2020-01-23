@@ -15,6 +15,8 @@ public class DemoApplication {
 
 		System.out.println(foo);
 
+		Math.random();
+
 //		SpringApplication.run(DemoApplication.class, args);
 	}
 

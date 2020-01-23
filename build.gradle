@@ -46,6 +46,10 @@ dependencies {
 	implementation('mysql:mysql-connector-java')
     implementation('org.codelibs:lucene-analyzers-kuromoji-ipadic-neologd:8.0.0-20190722')
     implementation('org.flywaydb:flyway-core')
+    implementation "org.functionaljava:functionaljava:4.8"
+    implementation "org.functionaljava:functionaljava-java8:4.8"
+    implementation "org.functionaljava:functionaljava-quickcheck:4.8"
+    implementation "org.functionaljava:functionaljava-java-core:4.8"
     testImplementation('org.springframework.security:spring-security-test')
 	testCompile('org.springframework.boot:spring-boot-starter-test') {
        exclude module: 'junit'
