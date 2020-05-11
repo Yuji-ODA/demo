@@ -1,6 +1,5 @@
 package com.example.demo.lib;
 
-import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -18,25 +17,25 @@ class OptionalUtilTest {
         Optional<String> z = Optional.of("Z");
 //        Optional<String> z = Optional.empty();
 
-        val zyExist = x.<Function<String, Function<String, Supplier<String>>>>map(
+        Function<String, Function<String, Supplier<String>>> zyExist = x.<Function<String, Function<String, Supplier<String>>>>map(
                 a1 -> a2 -> a3 -> () -> String.join(" and ", a1, a2, a3)
         ).orElse(
                 a1 -> a2 -> () -> String.join(" and ", a1, a2)
         );
 
-        val z_Exist = x.<Function<String, Supplier<String>>>map(
+        Function<String, Supplier<String>> z_Exist = x.<Function<String, Supplier<String>>>map(
                 a1 -> a2 -> () -> String.join(" and ", a1, a2)
         ).orElse(
                 a1 -> () -> a1
         );
 
-        val _yExist = x.<Function<String, Supplier<String>>>map(
+        Function<String, Supplier<String>> _yExist = x.<Function<String, Supplier<String>>>map(
                 a1 -> a2 -> () -> String.join(" and ", a1, a2)
         ).orElse(
                 a1 -> () -> a1
         );
 
-        val __Exist = x.<Supplier<String>>map(
+        Supplier<String> __Exist = x.<Supplier<String>>map(
                 a1 -> () -> a1
         ).orElse(
                 () -> "none"
