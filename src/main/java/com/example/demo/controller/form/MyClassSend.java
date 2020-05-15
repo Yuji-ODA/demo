@@ -4,18 +4,13 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
+import org.springframework.core.io.ByteArrayResource;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class Hoge {
-    private String myName;
-    private int seqNo;
-    private String file;
-    private MyClass myClass;
-    private List<MyClass2> myClasses;
+public class MyClassSend {
+    private String name;
+    private int id;
+    private ByteArrayResource file;
 }
