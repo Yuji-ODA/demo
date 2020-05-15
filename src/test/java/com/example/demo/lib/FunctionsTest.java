@@ -13,15 +13,8 @@ class FunctionsTest {
                 new PostController.Address("埼玉県越谷市東越谷３８－２５", null));
 
         dumpProperties(ore, (name, value) -> {
-            if ("class".equals(name)) {
-                return;
-            }
-
             if ("address".equals(name)) {
                 dumpProperties(value, (name2, value2) -> {
-                    if ("class".equals(name2)) {
-                        return;
-                    }
                     System.out.println("address." + name2 + ": " + value2);
                 });
                 return;
