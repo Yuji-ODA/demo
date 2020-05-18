@@ -3,8 +3,13 @@ package com.example.demo.lib;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.core.io.ByteArrayResource;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Stack;
 import java.util.function.BiConsumer;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -23,6 +28,43 @@ public final class Functions {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+        });
+    }
+
+    public static <T> void pickProperties(T obj, BiConsumer<Stack<String>, Object> callback) {
+        pickPropertiesInternal(obj, new Stack<>(), callback);
+    }
+
+    private static <T> void pickPropertiesInternal(T obj, Stack<String> propertyNames,
+                                                   BiConsumer<Stack<String>, Object> callback) {
+
+        if (obj == null || BeanUtils.isSimpleProperty(obj.getClass()) || obj instanceof Collection || obj instanceof Map) {
+            callback.accept(propertyNames, obj);
+            return;
+        }
+
+        Arrays.stream(BeanUtils.getPropertyDescriptors(obj.getClass())).forEach(descriptor -> {
+            String propertyName = descriptor.getName();
+
+            if ("class".equals(propertyName)) {
+                return;
+            }
+
+            Object value;
+            try {
+                value = descriptor.getReadMethod().invoke(obj);
+            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+
+            propertyNames.push(propertyName);
+
+            if (value != null && ByteArrayResource.class == value.getClass()) {
+                value = value.toString();
+            }
+            pickPropertiesInternal(value, propertyNames, callback);
+
+            propertyNames.pop();
         });
     }
 
