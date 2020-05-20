@@ -15,7 +15,13 @@ import java.util.function.BiConsumer;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Functions {
 
-    public static <T> void dumpProperties(T obj, BiConsumer<String, Object> callback) {
+    public static void propertiesEach(Object obj, BiConsumer<String, Object> callback) {
+
+        if (obj == null || BeanUtils.isSimpleValueType(obj.getClass())) {
+            callback.accept("", obj);
+            return;
+        }
+
         Arrays.stream(BeanUtils.getPropertyDescriptors(obj.getClass())).forEach(descriptor -> {
             String propertyName = descriptor.getName();
 
@@ -31,12 +37,12 @@ public final class Functions {
         });
     }
 
-    public static <T> void pickProperties(T obj, BiConsumer<Stack<String>, Object> callback) {
-        pickPropertiesInternal(obj, new Stack<>(), callback);
+    public static void propertiesRecursiveEach(Object obj, BiConsumer<Stack<String>, Object> callback) {
+        propertiesRecursiveEachInternal(obj, new Stack<>(), callback);
     }
 
-    private static <T> void pickPropertiesInternal(T obj, Stack<String> propertyNames,
-                                                   BiConsumer<Stack<String>, Object> callback) {
+    private static void propertiesRecursiveEachInternal(Object obj, Stack<String> propertyNames,
+                                                            BiConsumer<Stack<String>, Object> callback) {
 
         if (obj == null || BeanUtils.isSimpleProperty(obj.getClass()) || obj instanceof Collection || obj instanceof Map) {
             callback.accept(propertyNames, obj);
@@ -62,7 +68,7 @@ public final class Functions {
             if (value != null && ByteArrayResource.class == value.getClass()) {
                 value = value.toString();
             }
-            pickPropertiesInternal(value, propertyNames, callback);
+            propertiesRecursiveEachInternal(value, propertyNames, callback);
 
             propertyNames.pop();
         });
