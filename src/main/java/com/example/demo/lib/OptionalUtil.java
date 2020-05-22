@@ -45,7 +45,7 @@ public final class OptionalUtil {
     }
 
     public static <A> Optional<List<A>> sequence(List<Optional<A>> l) {
-        return traverse(l, Optional::ofNullable);
+        return traverse(l, Optional::of);
     }
 
     public static <A, B> Optional<List<B>> traverse(List<Optional<A>> l, Function<A, Optional<B>> f) {
