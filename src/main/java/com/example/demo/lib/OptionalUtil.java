@@ -11,6 +11,7 @@ import java.util.function.Function;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class OptionalUtil {
 
+    @SafeVarargs
     public static <T> Optional<T> reduce(T identity, BinaryOperator<T> f, Optional<T>... args) {
         return Arrays.stream(args).reduce(Optional.ofNullable(identity),
                 (s, x) -> s.flatMap(a -> x.map(b -> f.apply(a, b))));
