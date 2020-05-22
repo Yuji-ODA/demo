@@ -71,4 +71,25 @@ class OptionalUtilTest {
         assertThat(result).isEmpty();
     }
 
+    @Test
+    void traverse() {
+
+        List<Optional<Integer>> l = Arrays.asList(Optional.of(1), Optional.of(2));
+
+        Optional<List<Integer>> result = OptionalUtil.traverse(l, x -> Optional.of(x * 2));
+
+        assertThat(result).isNotEmpty();
+        assertThat(result.get()).containsExactly(2, 4);
+    }
+
+    @Test
+    void traverseWhenContainsEmpty() {
+
+        List<Optional<Integer>> l = Arrays.asList(Optional.of(1), Optional.of(2), Optional.empty());
+
+        Optional<List<Integer>> result = OptionalUtil.traverse(l, x -> Optional.of(x * 2));
+
+        assertThat(result).isEmpty();
+    }
+
 }
