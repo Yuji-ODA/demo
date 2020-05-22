@@ -3,8 +3,11 @@ package com.example.demo.lib;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -33,4 +36,16 @@ public final class OptionalUtil {
         }
         return Arrays.copyOfRange(array, 1, array.length);
     }
+
+    public static <A> Optional<List<A>> sequence(List<Optional<A>> l) {
+        return FunctionalUtil.foldRight(l, Optional.of(new ArrayList<>()), (f, acc) -> map2(f, acc, (a, aList) -> {
+           aList.add(0, a);
+           return aList;
+        }));
+    }
+
+    public static <A, B, C> Optional<C> map2(Optional<A> aOptional, Optional<B> bOptional, BiFunction<A, B, C> f) {
+        return aOptional.flatMap(a -> bOptional.map(b -> f.apply(a, b)));
+    }
+
 }

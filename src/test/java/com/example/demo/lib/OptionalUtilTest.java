@@ -2,9 +2,13 @@ package com.example.demo.lib;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class OptionalUtilTest {
 
@@ -45,4 +49,26 @@ class OptionalUtilTest {
 
         System.out.println(result);
     }
+
+    @Test
+    void sequence() {
+
+        List<Optional<Integer>> l = Arrays.asList(Optional.of(1), Optional.of(2));
+
+        Optional<List<Integer>> result = OptionalUtil.sequence(l);
+
+        assertThat(result).isNotEmpty();
+        assertThat(result.get()).containsExactly(1, 2);
+    }
+
+    @Test
+    void sequenceWhenContainsEmpty() {
+
+        List<Optional<Integer>> l = Arrays.asList(Optional.of(1), Optional.of(2), Optional.empty());
+
+        Optional<List<Integer>> result = OptionalUtil.sequence(l);
+
+        assertThat(result).isEmpty();
+    }
+
 }
