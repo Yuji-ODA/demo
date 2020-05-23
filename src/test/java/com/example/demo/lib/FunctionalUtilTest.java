@@ -4,17 +4,25 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FunctionalUtilTest {
 
     List<String> list;
+    Set<String> set;
 
     @BeforeEach
     void setUpEach() {
         list = Arrays.asList("I", "am", "john");
+        set = new HashSet<>(list);
     }
 
     @Test
@@ -31,5 +39,24 @@ class FunctionalUtilTest {
 
         assertThat(sum).isEqualTo(" john am I");
 
+    }
+
+    @Test
+    void foldRightForSet() {
+
+        Set<Integer> values = IntStream.range(0, 100).boxed().collect(Collectors.toSet());
+
+        int sum = FunctionalUtil.foldRight(values, 0, Integer::sum);
+
+        assertThat(sum).isEqualTo(99 * 50);
+    }
+
+    @Test
+    void foldRightForSetResultsINStackOverflow() {
+
+        Set<Integer> values = IntStream.range(0, 1000000).boxed().collect(Collectors.toSet());
+
+        assertThatThrownBy(() -> FunctionalUtil.foldRight(values, 0, Integer::sum))
+                .isInstanceOf(StackOverflowError.class);
     }
 }

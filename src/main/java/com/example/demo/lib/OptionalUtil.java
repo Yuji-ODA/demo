@@ -17,6 +17,23 @@ public final class OptionalUtil {
                 (s, x) -> s.flatMap(a -> x.map(b -> f.apply(a, b))));
     }
 
+    public static <A> Optional<List<A>> sequence(List<Optional<A>> l) {
+        return traverse(l, Optional::of);
+    }
+
+    public static <A, B> Optional<List<B>> traverse(List<Optional<A>> l, Function<A, Optional<B>> f) {
+        return FunctionalUtil.foldRight(l, Optional.of(new ArrayList<>()),
+                (aOptional, acc) -> map2(aOptional.flatMap(f), acc,
+                        (b, bList) -> {
+                            bList.add(0, b);
+                            return bList;
+                        }));
+    }
+
+    public static <A, B, C> Optional<C> map2(Optional<A> aOptional, Optional<B> bOptional, BiFunction<A, B, C> f) {
+        return aOptional.flatMap(a -> bOptional.map(b -> f.apply(a, b)));
+    }
+
     public static <T> Optional<T> reduce(T identity, BinaryOperator<T> f, Collection<Optional<T>> args) {
         return args.stream().reduce(Optional.ofNullable(identity),
                 (s, x) -> s.flatMap(a -> x.map(b -> f.apply(a, b))));
@@ -41,20 +58,4 @@ public final class OptionalUtil {
         return Arrays.copyOfRange(array, 1, array.length);
     }
 
-    public static <A, B, C> Optional<C> map2(Optional<A> aOptional, Optional<B> bOptional, BiFunction<A, B, C> f) {
-        return aOptional.flatMap(a -> bOptional.map(b -> f.apply(a, b)));
-    }
-
-    public static <A> Optional<List<A>> sequence(List<Optional<A>> l) {
-        return traverse(l, Optional::of);
-    }
-
-    public static <A, B> Optional<List<B>> traverse(List<Optional<A>> l, Function<A, Optional<B>> f) {
-        return FunctionalUtil.foldRight(l, Optional.of(new ArrayList<>()),
-                (aOptional, acc) -> map2(aOptional.flatMap(f), acc,
-                        (b, bList) -> {
-                            bList.add(0, b);
-                            return bList;
-                        }));
-    }
 }
