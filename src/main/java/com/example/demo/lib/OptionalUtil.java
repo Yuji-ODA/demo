@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class OptionalUtil {
@@ -32,6 +33,22 @@ public final class OptionalUtil {
 
     public static <A, B, C> Optional<C> map2(Optional<A> aOptional, Optional<B> bOptional, BiFunction<A, B, C> f) {
         return aOptional.flatMap(a -> bOptional.map(b -> f.apply(a, b)));
+    }
+
+    public static <A, B> Function<Optional<A>, Optional<B>> lift(Function<A, B> f) {
+        return aOptional -> aOptional.map(f);
+    }
+
+    public static <A> UnaryOperator<Optional<A>> lift(UnaryOperator<A> f) {
+        return aOptional -> aOptional.map(f);
+    }
+
+    public static <A, B, C> BiFunction<Optional<A>, Optional<B>, Optional<C>> lift(BiFunction<A, B, C> f) {
+        return (aOptional, bOptional) -> aOptional.flatMap(a -> bOptional.map(b -> f.apply(a, b)));
+    }
+
+    public static <A> BinaryOperator<Optional<A>> lift(BinaryOperator<A> f) {
+        return (aOptional, bOptional) -> aOptional.flatMap(a -> bOptional.map(b -> f.apply(a, b)));
     }
 
     public static <T> Optional<T> reduce(T identity, BinaryOperator<T> f, Collection<Optional<T>> args) {

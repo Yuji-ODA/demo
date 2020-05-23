@@ -5,8 +5,10 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -90,6 +92,23 @@ class OptionalUtilTest {
         Optional<List<Integer>> result = OptionalUtil.traverse(l, x -> Optional.of(x * 2));
 
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    void liftUnaryOperator() {
+        UnaryOperator<Integer> doubleInteger = x -> 2 * x;
+        UnaryOperator<Optional<Integer>> doubleOptional = OptionalUtil.lift(doubleInteger);
+        Optional<Integer> result = doubleOptional.apply(Optional.of(10));
+
+        assertThat(result).isEqualTo(Optional.of(20));
+    }
+
+    @Test
+    void liftBinaryOperator() {
+        BinaryOperator<Optional<Integer>> sumOptional = OptionalUtil.lift(Integer::sum);
+        Optional<Integer> result = sumOptional.apply(Optional.of(1), Optional.of(2));
+
+        assertThat(result).isEqualTo(Optional.of(3));
     }
 
 }
