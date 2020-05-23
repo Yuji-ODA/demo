@@ -43,6 +43,22 @@ public final class OptionalUtil {
         return aOptional -> aOptional.map(f);
     }
 
+    private static final UnaryOperator<Optional<Boolean>> LOGICAL_NOT =  lift(b -> !b);
+    private static final BinaryOperator<Optional<Boolean>> LOGICAL_AND =  lift(Boolean::logicalAnd);
+    private static final BinaryOperator<Optional<Boolean>> LOGICAL_OR =  lift(Boolean::logicalOr);
+
+    public static Optional<Boolean> logicalNot(Optional<Boolean> a) {
+        return LOGICAL_NOT.apply(a);
+    }
+
+    public static Optional<Boolean> logicalAnd(Optional<Boolean> a, Optional<Boolean> b) {
+        return LOGICAL_AND.apply(a, b);
+    }
+
+    public static Optional<Boolean> logicalOr(Optional<Boolean> a, Optional<Boolean> b) {
+        return LOGICAL_OR.apply(a, b);
+    }
+
     public static <A, B, C> BiFunction<Optional<A>, Optional<B>, Optional<C>> lift(BiFunction<A, B, C> f) {
         return (aOptional, bOptional) -> aOptional.flatMap(a -> bOptional.map(b -> f.apply(a, b)));
     }

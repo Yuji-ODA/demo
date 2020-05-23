@@ -111,4 +111,20 @@ class OptionalUtilTest {
         assertThat(result).isEqualTo(Optional.of(3));
     }
 
+    @Test
+    void logicalNot() {
+        assertThat(OptionalUtil.logicalNot(Optional.of(true))).isEqualTo(Optional.of(false));
+    }
+
+    @Test
+    void logicalAnd() {
+        assertThat(OptionalUtil.logicalAnd(Optional.of(true), Optional.of(false)))
+                .isEqualTo(Optional.of(false));
+    }
+
+    @Test
+    void logicalOr() {
+        assertThat(OptionalUtil.logicalOr(Optional.of(true), Optional.of(false)))
+                .isEqualTo(Optional.of(true));
+    }
 }
