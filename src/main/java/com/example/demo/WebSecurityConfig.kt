@@ -2,10 +2,13 @@ package com.example.demo
 
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AbstractAuthenticationToken
+import org.springframework.security.authentication.AuthenticationProvider
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
@@ -53,17 +56,17 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 //        }
 //    }
 //
-//    override fun configure(auth: AuthenticationManagerBuilder?) {
-//        auth?.authenticationProvider(object: AuthenticationProvider {
-//            override fun authenticate(authentication: Authentication?): Authentication? {
-//                return authentication?.apply {
-//                    isAuthenticated = true
-//                }
-//            }
-//
-//            override fun supports(authentication: Class<*>?): Boolean = true
-//        })
-//    }
+    override fun configure(auth: AuthenticationManagerBuilder?) {
+        auth?.authenticationProvider(object: AuthenticationProvider {
+            override fun authenticate(authentication: Authentication?): Authentication? {
+                return authentication?.apply {
+                    isAuthenticated = true
+                }
+            }
+
+            override fun supports(authentication: Class<*>?): Boolean = true
+        })
+    }
 
 //    @Configuration
 //    open class AuthenticationManagerConf {
@@ -88,7 +91,7 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 //            throw ForbiddenException("forbidden")
 
             val authentication = MyAuthentication("ユーザ", Collections.singletonList(SimpleGrantedAuthority("ROLE_USER")))
-            authentication.isAuthenticated = true
+//            authentication.isAuthenticated = true
             SecurityContextHolder.getContext().authentication = authentication
             filterChain.doFilter(request, response)
         }
@@ -101,9 +104,9 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
     class MyAuthentication(principal: Any, authorities: Collection<GrantedAuthority>) : AbstractAuthenticationToken(authorities) {
 
-        private val principalHidden = principal
+        private val principAlias = principal
 
         override fun getCredentials(): Any = ""
-        override fun getPrincipal(): Any = principalHidden
+        override fun getPrincipal(): Any = principAlias
     }
 }
