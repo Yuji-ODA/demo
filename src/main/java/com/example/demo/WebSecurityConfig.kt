@@ -1,5 +1,6 @@
 package com.example.demo
 
+import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -8,8 +9,8 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.filter.OncePerRequestFilter
 import java.util.*
 import javax.servlet.FilterChain
@@ -30,7 +31,10 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 .and()
 //                .addFilterBefore(MyFilter(), BasicAuthenticationFilter::class.java)
                 .addFilterBefore(MySecurityFilter(), BasicAuthenticationFilter::class.java)
-                .exceptionHandling().authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/login"))
+//                .exceptionHandling().authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/login"))
+                .exceptionHandling().accessDeniedHandler { request, response, accessDeniedException ->
+                    response.sendRedirect("http://www.yahoo.co.jp")
+                }
 //                .formLogin()
                 .and()
                 .headers().frameOptions().disable()
@@ -56,11 +60,20 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
     class MySecurityFilter : OncePerRequestFilter() {
         override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
+
+//            throw object: AuthenticationException("forbidden") {}
+//            throw ForbiddenException("forbidden")
+
             val authentication = MyAuthentication("ユーザ", Collections.singletonList(SimpleGrantedAuthority("ROLE_USER")))
             authentication.isAuthenticated = true
             SecurityContextHolder.getContext().authentication = authentication
             filterChain.doFilter(request, response)
         }
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    class ForbiddenException(msg: String): RuntimeException(msg) {
+        constructor(msg: String, t: Throwable) : this(msg)
     }
 
     class MyAuthentication(principal: Any, authorities: Collection<GrantedAuthority>) : AbstractAuthenticationToken(authorities) {
