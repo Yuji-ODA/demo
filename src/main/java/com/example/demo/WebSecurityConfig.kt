@@ -32,18 +32,41 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 //                .addFilterBefore(MyFilter(), BasicAuthenticationFilter::class.java)
                 .addFilterBefore(MySecurityFilter(), BasicAuthenticationFilter::class.java)
 //                .exceptionHandling().authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/login"))
-                .exceptionHandling().accessDeniedHandler { request, response, accessDeniedException ->
-                    response.sendRedirect("http://www.yahoo.co.jp")
-                }
+//                .exceptionHandling().accessDeniedHandler { request, response, accessDeniedException ->
+//                    response.sendRedirect("http://www.yahoo.co.jp")
+//                }
 //                .formLogin()
-                .and()
-                .headers().frameOptions().disable()
-                .and()
+//                .and()
+//                .headers().frameOptions().disable()
+//                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     }
 
 //    @Configuration
 //    open class FilterConf {
+//        @Bean
+//        open fun filter(): FilterRegistrationBean<MySecurityFilter> {
+//            return FilterRegistrationBean(MySecurityFilter()).apply {
+//                order = Ordered.HIGHEST_PRECEDENCE
+//                addUrlPatterns("/**", "/", "/book")
+//            }
+//        }
+//    }
+//
+//    override fun configure(auth: AuthenticationManagerBuilder?) {
+//        auth?.authenticationProvider(object: AuthenticationProvider {
+//            override fun authenticate(authentication: Authentication?): Authentication? {
+//                return authentication?.apply {
+//                    isAuthenticated = true
+//                }
+//            }
+//
+//            override fun supports(authentication: Class<*>?): Boolean = true
+//        })
+//    }
+
+//    @Configuration
+//    open class AuthenticationManagerConf {
 //        @Bean
 //        open fun authenticationManager(): AuthenticationManager {
 //            return AuthenticationManager {
