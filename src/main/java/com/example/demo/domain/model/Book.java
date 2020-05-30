@@ -26,7 +26,7 @@ public class Book {
     @Column(nullable = false)
     private double price;
 
-    @Column
+    @Column(nullable = false)
     @CreatedDate
     private LocalDateTime createdAt;
 }
