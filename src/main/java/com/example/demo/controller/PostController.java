@@ -9,6 +9,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class PostController {
     private final ObjectMapper objectMapper;
 
     @GetMapping
-    public String postData() throws Exception {
+    public String postData(Authentication authentication) throws Exception {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("id", 1);
         body.add("name", "小田雄二");
