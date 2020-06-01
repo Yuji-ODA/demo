@@ -21,12 +21,12 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @EnableWebSecurity
-open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
+class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         // 認可の設定
         http
-                .csrf().disable()
+                .csrf().disable().antMatcher("/**")
                 .authorizeRequests()
                     .antMatchers("/console/**").permitAll()
                     .anyRequest().authenticated()
@@ -104,9 +104,9 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
     class MyAuthentication(principal: Any, authorities: Collection<GrantedAuthority>) : AbstractAuthenticationToken(authorities) {
 
-        private val principAlias = principal
+        private val principalAlias = principal
 
         override fun getCredentials(): Any = ""
-        override fun getPrincipal(): Any = principAlias
+        override fun getPrincipal(): Any = principalAlias
     }
 }
