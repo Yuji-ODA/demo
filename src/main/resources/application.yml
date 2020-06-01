@@ -19,3 +19,10 @@ preference:
     list-length: 5
     checked: false
 
+logging:
+  level:
+    org:
+      springframework:
+        security:
+          web:
+            FilterChainProxy=DEBUG:

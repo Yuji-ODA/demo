@@ -13,6 +13,8 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
+import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.filter.OncePerRequestFilter
 import java.util.*
@@ -20,7 +22,7 @@ import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
@@ -33,7 +35,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 //                    .anyRequest().hasAnyRole("USER") // それ以外は全て認証無しの場合アクセス不許可
                 .and()
 //                .addFilterBefore(MyFilter(), BasicAuthenticationFilter::class.java)
-                .addFilterBefore(MySecurityFilter(), BasicAuthenticationFilter::class.java)
+                .addFilterBefore(MySecurityFilter(AntPathRequestMatcher("/book/**")), BasicAuthenticationFilter::class.java)
+                .addFilterBefore(MyFilter(AntPathRequestMatcher("/")), BasicAuthenticationFilter::class.java)
 //                .exceptionHandling().authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/login"))
 //                .exceptionHandling().accessDeniedHandler { request, response, accessDeniedException ->
 //                    response.sendRedirect("http://www.yahoo.co.jp")
@@ -68,31 +71,30 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         })
     }
 
-//    @Configuration
-//    open class AuthenticationManagerConf {
-//        @Bean
-//        open fun authenticationManager(): AuthenticationManager {
-//            return AuthenticationManager {
-//                it.apply { isAuthenticated = true }
-//            }
-//        }
-//    }
+    class MyFilter(private val requestMatcher: RequestMatcher = RequestMatcher { true }) : OncePerRequestFilter() {
+        override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
+            if (requestMatcher.matches(request)) {
+                val authentication = MyAuthentication("ユーザ", Collections.singletonList(SimpleGrantedAuthority("ROLE_USER")))
+//            authentication.isAuthenticated = true
+                SecurityContextHolder.getContext().authentication = authentication
+            }
 
-//    class MyFilter : AbstractAuthenticationProcessingFilter("/login") {
-//        override fun attemptAuthentication(request: HttpServletRequest?, response: HttpServletResponse?): Authentication {
-//            return MyAuthentication("ユーザ", Collections.singletonList(SimpleGrantedAuthority("ROLE_USER")))
-//        }
-//    }
+            filterChain.doFilter(request, response)
+        }
+    }
 
-    class MySecurityFilter : OncePerRequestFilter() {
+    class MySecurityFilter(private val requestMatcher: RequestMatcher = RequestMatcher { true }) : OncePerRequestFilter() {
         override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
 
 //            throw object: AuthenticationException("forbidden") {}
 //            throw ForbiddenException("forbidden")
 
-            val authentication = MyAuthentication("ユーザ", Collections.singletonList(SimpleGrantedAuthority("ROLE_USER")))
+            if (requestMatcher.matches(request)) {
+                val authentication = MyAuthentication("ユーザ", Collections.singletonList(SimpleGrantedAuthority("ROLE_USER")))
 //            authentication.isAuthenticated = true
-            SecurityContextHolder.getContext().authentication = authentication
+                SecurityContextHolder.getContext().authentication = authentication
+            }
+
             filterChain.doFilter(request, response)
         }
     }
