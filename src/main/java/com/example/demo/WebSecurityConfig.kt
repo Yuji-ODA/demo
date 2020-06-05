@@ -1,5 +1,6 @@
 package com.example.demo
 
+import com.example.demo.lib.User
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.authentication.AuthenticationProvider
@@ -111,4 +112,6 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         override fun getCredentials(): Any = ""
         override fun getPrincipal(): Any = principalAlias
     }
+
 }
+

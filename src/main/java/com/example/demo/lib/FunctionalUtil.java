@@ -32,4 +32,5 @@ public final class FunctionalUtil {
         // may occur stack overflow
         return foldLeft(collection, Function.<B>identity(), (fb, a) -> b -> fb.apply(f.apply(a, b))).apply(identity);
     }
+
 }
