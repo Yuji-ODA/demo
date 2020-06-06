@@ -24,14 +24,14 @@ public final class OptionalUtil {
 
     public static <A, B> Optional<List<B>> traverse(List<Optional<A>> l, Function<A, Optional<B>> f) {
         return FunctionalUtil.foldRight(l, Optional.of(new ArrayList<>()),
-                (aOptional, acc) -> map2(aOptional.flatMap(f), acc,
+                (aOptional, acc) -> merge(aOptional.flatMap(f), acc,
                         (b, bList) -> {
                             bList.add(0, b);
                             return bList;
                         }));
     }
 
-    public static <A, B, C> Optional<C> map2(Optional<A> aOptional, Optional<B> bOptional, BiFunction<A, B, C> f) {
+    public static <A, B, C> Optional<C> merge(Optional<A> aOptional, Optional<B> bOptional, BiFunction<A, B, C> f) {
         return aOptional.flatMap(a -> bOptional.map(b -> f.apply(a, b)));
     }
 

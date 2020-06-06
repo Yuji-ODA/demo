@@ -2,6 +2,7 @@ package com.example.demo.lib;
 
 import org.apache.logging.log4j.util.Supplier;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @FunctionalInterface
@@ -9,6 +10,10 @@ public interface SupplierMonad<T> extends Supplier<T> {
 
     static <T> SupplierMonad<T> unit(T value) {
         return () -> value;
+    }
+
+    static <T> SupplierMonad<T> unit(Supplier<T> supplier) {
+        return supplier::get;
     }
 
     static <T, U, W> Function<T, SupplierMonad<W>> compose(Function<T, SupplierMonad<U>> f, Function<U, SupplierMonad<W>> g) {
@@ -29,5 +34,7 @@ public interface SupplierMonad<T> extends Supplier<T> {
         return flatMap(t -> unit(f.apply(t)));
     }
 
-
+    default <U, W> SupplierMonad<W> merge(SupplierMonad<U> other, BiFunction<T, U, W> f) {
+        return flatMap(t -> other.map(u -> f.apply(t, u)));
+    }
 }
