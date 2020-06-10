@@ -1,9 +1,8 @@
 package com.example.demo.lib;
 
-import org.apache.logging.log4j.util.Supplier;
-
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 @FunctionalInterface
 public interface SupplierMonad<T> extends Supplier<T> {
