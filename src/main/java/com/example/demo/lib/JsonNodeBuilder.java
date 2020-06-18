@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.Arrays;
 
-class JsonNodeBuilder {
+public class JsonNodeBuilder {
     private final JsonNodeFactory factory;
     private final ObjectNode node;
 
