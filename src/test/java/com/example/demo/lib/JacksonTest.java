@@ -1,5 +1,6 @@
 package com.example.demo.lib;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.util.Arrays;
+import java.util.Map;
 
 public class JacksonTest {
 
@@ -21,10 +23,13 @@ public class JacksonTest {
                 .featuresToDisable(SerializationFeature.CLOSE_CLOSEABLE)
                 .build();
 
-        ObjectNode tree = node()
-                .<ObjectNode>set("name", valueOf("orehadarenanoka"))
-                .<ObjectNode>set("age", valueOf(100053))
-                .set("history", arrayOf("first", "second"));
+        ObjectNode tree = JsonNodeBuilder.builder()
+                .set("name", "orehadarenanoka")
+                .set("age", 100053)
+                .setArray("history", "first", "second", 1)
+                .build();
+
+        System.out.println(mapper.convertValue(tree, new TypeReference<Map<String, ?>>() {}));
 
         System.out.println(mapper.writeValueAsString(tree));
     }
@@ -45,4 +50,5 @@ public class JacksonTest {
         return Arrays.stream(values)
                 .reduce(emptyArray(), ArrayNode::addPOJO, ArrayNode::addAll);
     }
+
 }
