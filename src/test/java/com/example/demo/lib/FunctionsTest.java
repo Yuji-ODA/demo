@@ -12,7 +12,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 import static com.example.demo.lib.Functions.propertiesRecursiveEach;
@@ -72,22 +76,36 @@ class FunctionsTest {
         System.out.println(clz.hoge());
     }
 
+    private static final Pattern TRIM = Pattern.compile("(?:^\\h+|\\h+$)");
+
+    private static Function<Matcher, String> replaceWith(String replace) {
+        return matcher -> matcher.replaceAll(replace);
+    }
+
+    private static String trim(String src) {
+        return Optional.ofNullable(src)
+                .map(TRIM::matcher)
+                .filter(Matcher::find)
+                .map(replaceWith(""))
+                .orElse(src);
+    }
+
     @Test
     void matches() {
-        assertThat(" ".replaceAll("(?:^\\h+|\\h+$)", "")).isEmpty();
-        assertThat("　".replaceAll("(?:^\\h+|\\h+$)", "")).isEmpty();
-        assertThat(" hoge ".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("hoge");
-        assertThat("hoge ".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("hoge");
-        assertThat(" hoge".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("hoge");
-        assertThat(" hoge huga ".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("hoge huga");
-        assertThat("hoge huga ".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("hoge huga");
-        assertThat(" hoge huga".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("hoge huga");
-        assertThat("　ほげ　".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("ほげ");
-        assertThat("ほげ　".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("ほげ");
-        assertThat("　ほげ".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("ほげ");
-        assertThat("　ほげ　ふが　".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("ほげ　ふが");
-        assertThat("ほげ　ふが　".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("ほげ　ふが");
-        assertThat("　ほげ　ふが".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("ほげ　ふが");
+        assertThat(trim(" ")).isEmpty();
+        assertThat(trim("　")).isEmpty();
+        assertThat(trim(" hoge ")).isEqualTo("hoge");
+        assertThat(trim("hoge ")).isEqualTo("hoge");
+        assertThat(trim(" hoge")).isEqualTo("hoge");
+        assertThat(trim(" hoge huga ")).isEqualTo("hoge huga");
+        assertThat(trim("hoge huga ")).isEqualTo("hoge huga");
+        assertThat(trim(" hoge huga")).isEqualTo("hoge huga");
+        assertThat(trim("　ほげ　")).isEqualTo("ほげ");
+        assertThat(trim("ほげ　")).isEqualTo("ほげ");
+        assertThat(trim("　ほげ")).isEqualTo("ほげ");
+        assertThat(trim("　ほげ　ふが　")).isEqualTo("ほげ　ふが");
+        assertThat(trim("ほげ　ふが　")).isEqualTo("ほげ　ふが");
+        assertThat(trim("　ほげ　ふが")).isEqualTo("ほげ　ふが");
     }
 
     interface If {
