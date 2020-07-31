@@ -3,15 +3,20 @@ package com.example.demo.lib;
 import com.example.demo.controller.form.HogeSend;
 import com.example.demo.controller.form.MyClass2;
 import com.example.demo.controller.form.MyClassSend;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.stream.IntStream;
 
 import static com.example.demo.lib.Functions.propertiesRecursiveEach;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class FunctionsTest {
 
@@ -36,5 +41,68 @@ class FunctionsTest {
             }
             System.out.println(propertuName + ": " + value);
         });
+    }
+
+    @Test
+    void huga() throws Exception {
+
+        BiFunction<Integer, Long, String> bifun = FunctionsTest::fun;
+        BiFunction<Cls, Integer, String> bifun2 = Cls::hoge;
+
+        Huga huga = Huga.of(1, 1.56F, "search");
+        System.out.println(new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT).writeValueAsString(huga));
+    }
+
+    static <T1, T2> String fun(T1 t1, T2 t2) {
+        return t1.toString() + t2;
+    }
+
+    @Test
+    void uri() {
+        String uriString = UriComponentsBuilder.fromHttpUrl("http://hoge.org")
+                .path("huga#ほげ")
+                .encode()
+                .build()
+                .toUriString();
+        System.out.println(uriString);
+
+
+        Clz clz = new Clz();
+
+        System.out.println(clz.hoge());
+    }
+
+    @Test
+    void matches() {
+        assertThat(" ".replaceAll("(?:^\\h+|\\h+$)", "")).isEmpty();
+        assertThat("　".replaceAll("(?:^\\h+|\\h+$)", "")).isEmpty();
+        assertThat(" hoge ".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("hoge");
+        assertThat("hoge ".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("hoge");
+        assertThat(" hoge".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("hoge");
+        assertThat(" hoge huga ".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("hoge huga");
+        assertThat("hoge huga ".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("hoge huga");
+        assertThat(" hoge huga".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("hoge huga");
+        assertThat("　ほげ　".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("ほげ");
+        assertThat("ほげ　".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("ほげ");
+        assertThat("　ほげ".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("ほげ");
+        assertThat("　ほげ　ふが　".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("ほげ　ふが");
+        assertThat("ほげ　ふが　".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("ほげ　ふが");
+        assertThat("　ほげ　ふが".replaceAll("(?:^\\h+|\\h+$)", "")).isEqualTo("ほげ　ふが");
+    }
+
+    interface If {
+        String HOGE = "hoge";
+    }
+
+    static class Cls implements If {
+        String hoge(Integer t1) {
+            return t1.toString();
+        }
+    }
+}
+
+class Clz {
+    public String hoge() {
+        return "hoge";
     }
 }

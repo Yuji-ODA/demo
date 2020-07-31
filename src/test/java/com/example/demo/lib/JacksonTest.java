@@ -29,6 +29,7 @@ public class JacksonTest {
                 .setArray("history", "first", "second", 1)
                 .build();
 
+        
         System.out.println(mapper.convertValue(tree, new TypeReference<Map<String, ?>>() {}));
 
         System.out.println(mapper.writeValueAsString(tree));
