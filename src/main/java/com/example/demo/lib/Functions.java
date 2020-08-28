@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Stack;
 import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Functions {
@@ -37,15 +38,17 @@ public final class Functions {
         });
     }
 
-    public static void propertiesRecursiveEach(Object obj, BiConsumer<Stack<String>, Object> callback) {
+    public static void propertiesRecursiveEach(Object obj, BiConsumer<String, Object> callback) {
         propertiesRecursiveEachInternal(obj, new Stack<>(), callback);
     }
 
     private static void propertiesRecursiveEachInternal(Object obj, Stack<String> propertyNames,
-                                                            BiConsumer<Stack<String>, Object> callback) {
+                                                            BiConsumer<String, Object> callback) {
+
+        BinaryOperator<String> reducer = (acc, elem) -> acc + '.' + elem;
 
         if (obj == null || BeanUtils.isSimpleProperty(obj.getClass()) || obj instanceof Collection || obj instanceof Map) {
-            callback.accept(propertyNames, obj);
+            callback.accept(propertyNames.stream().reduce(reducer).orElse(""), obj);
             return;
         }
 

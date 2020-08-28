@@ -31,19 +31,29 @@ class FunctionsTest {
                 Arrays.asList(new MyClass2("aho", 1, null), new MyClass2("baka", 2, null)));
 
         propertiesRecursiveEach(hoge, (names, value) -> {
-            String propertuName = String.join(".", names);
-            if ("myClasses".equals(names.peek())) {
+            if ("myClasses".equals(names)) {
                 List<?> list = (List<Object>)value;
                 IntStream.range(0, list.size()).forEach(i -> {
                     Object obj = list.get(i);
                     if (obj instanceof MyClass2) {
-                        System.out.println(propertuName + '[' + i + ']' + ": " + value);
+                        System.out.println(names + '[' + i + ']' + ": " + value);
                     }
                 });
 
                 return;
             }
-            System.out.println(propertuName + ": " + value);
+            System.out.println(names + ": " + value);
+        });
+    }
+
+    @Test
+    void testDumpProperties2() {
+        ByteArrayResource resource = new ByteArrayResource("俺のファイル".getBytes(StandardCharsets.UTF_8));
+        HogeSend hoge = new HogeSend("hoge", 100, null, new MyClassSend("kuso", 10, resource),
+                Arrays.asList(new MyClass2("aho", 1, null), new MyClass2("baka", 2, null)));
+
+        propertiesRecursiveEach(hoge, (name, value) -> {
+            System.out.println(name + ": " + value);
         });
     }
 
@@ -69,11 +79,6 @@ class FunctionsTest {
                 .build()
                 .toUriString();
         System.out.println(uriString);
-
-
-        Clz clz = new Clz();
-
-        System.out.println(clz.hoge());
     }
 
     private static final Pattern TRIM = Pattern.compile("(?:^\\h+|\\h+$)");
@@ -85,7 +90,6 @@ class FunctionsTest {
     private static String trim(String src) {
         return Optional.ofNullable(src)
                 .map(TRIM::matcher)
-                .filter(Matcher::find)
                 .map(replaceWith(""))
                 .orElse(src);
     }
@@ -94,15 +98,19 @@ class FunctionsTest {
     void matches() {
         assertThat(trim(" ")).isEmpty();
         assertThat(trim("　")).isEmpty();
+        assertThat(trim("hoge")).isEqualTo("hoge");
         assertThat(trim(" hoge ")).isEqualTo("hoge");
         assertThat(trim("hoge ")).isEqualTo("hoge");
         assertThat(trim(" hoge")).isEqualTo("hoge");
+        assertThat(trim("hoge huga")).isEqualTo("hoge huga");
         assertThat(trim(" hoge huga ")).isEqualTo("hoge huga");
         assertThat(trim("hoge huga ")).isEqualTo("hoge huga");
         assertThat(trim(" hoge huga")).isEqualTo("hoge huga");
+        assertThat(trim("ほげ")).isEqualTo("ほげ");
         assertThat(trim("　ほげ　")).isEqualTo("ほげ");
         assertThat(trim("ほげ　")).isEqualTo("ほげ");
         assertThat(trim("　ほげ")).isEqualTo("ほげ");
+        assertThat(trim("ほげ　ふが")).isEqualTo("ほげ　ふが");
         assertThat(trim("　ほげ　ふが　")).isEqualTo("ほげ　ふが");
         assertThat(trim("ほげ　ふが　")).isEqualTo("ほげ　ふが");
         assertThat(trim("　ほげ　ふが")).isEqualTo("ほげ　ふが");
@@ -116,11 +124,5 @@ class FunctionsTest {
         String hoge(Integer t1) {
             return t1.toString();
         }
-    }
-}
-
-class Clz {
-    public String hoge() {
-        return "hoge";
     }
 }
