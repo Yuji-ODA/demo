@@ -94,7 +94,9 @@ public class Post2Controller {
 
         @Override
         @SneakyThrows
-        public String getAsText() {
+        public String getAsText(
+
+        ) {
             MyClass myClass = (MyClass)getValue();
             return mapper.writeValueAsString(myClass);
         }

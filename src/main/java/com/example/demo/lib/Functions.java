@@ -3,7 +3,6 @@ package com.example.demo.lib;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.core.io.ByteArrayResource;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -38,14 +37,13 @@ public final class Functions {
         });
     }
 
-    public static void propertiesRecursiveEach(Object obj, BiConsumer<String, Object> callback) {
-        propertiesRecursiveEachInternal(obj, new Stack<>(), callback);
+    public static void eachProperty(Object obj, BiConsumer<String, Object> callback) {
+        eachPropertyInternal(obj, new Stack<>(), callback);
     }
 
-    private static void propertiesRecursiveEachInternal(Object obj, Stack<String> propertyNames,
-                                                            BiConsumer<String, Object> callback) {
+    private static void eachPropertyInternal(Object obj, Stack<String> propertyNames, BiConsumer<String, Object> callback) {
 
-        BinaryOperator<String> reducer = (acc, elem) -> acc + '.' + elem;
+        final BinaryOperator<String> reducer = (acc, elem) -> acc + '.' + elem;
 
         if (obj == null || BeanUtils.isSimpleProperty(obj.getClass()) || obj instanceof Collection || obj instanceof Map) {
             callback.accept(propertyNames.stream().reduce(reducer).orElse(""), obj);
@@ -67,12 +65,7 @@ public final class Functions {
             }
 
             propertyNames.push(propertyName);
-
-            if (value != null && ByteArrayResource.class == value.getClass()) {
-                value = value.toString();
-            }
-            propertiesRecursiveEachInternal(value, propertyNames, callback);
-
+            eachPropertyInternal(value, propertyNames, callback);
             propertyNames.pop();
         });
     }

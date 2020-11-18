@@ -1,8 +1,8 @@
 package com.example.demo
 
-import com.example.demo.lib.User
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AbstractAuthenticationToken
+import org.springframework.security.authentication.AuthenticationDetailsSource
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -11,8 +11,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.GrantedAuthoritiesContainer
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.RequestMatcher
@@ -27,6 +29,9 @@ import javax.servlet.http.HttpServletResponse
 class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
+
+        this.authenticationManager()
+
         // 認可の設定
         http
                 .csrf().disable().antMatcher("/**")
@@ -100,18 +105,22 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         }
     }
 
+    fun example() {
+        val filter = object: RequestHeaderAuthenticationFilter() {}
+        val auth = AuthenticationDetailsSource<HttpServletRequest, GrantedAuthoritiesContainer> { TODO("Not yet implemented") }
+        filter.setAuthenticationDetailsSource(auth)
+    }
+
     @ResponseStatus(HttpStatus.FORBIDDEN)
     class ForbiddenException(msg: String): RuntimeException(msg) {
         constructor(msg: String, t: Throwable) : this(msg)
     }
 
     class MyAuthentication(principal: Any, authorities: Collection<GrantedAuthority>) : AbstractAuthenticationToken(authorities) {
-
         private val principalAlias = principal
 
         override fun getCredentials(): Any = ""
         override fun getPrincipal(): Any = principalAlias
     }
-
 }
 

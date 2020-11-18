@@ -19,7 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
-import static com.example.demo.lib.Functions.propertiesRecursiveEach;
+import static com.example.demo.lib.Functions.eachProperty;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FunctionsTest {
@@ -30,7 +30,7 @@ class FunctionsTest {
         HogeSend hoge = new HogeSend("hoge", 100, null, new MyClassSend("kuso", 10, resource),
                 Arrays.asList(new MyClass2("aho", 1, null), new MyClass2("baka", 2, null)));
 
-        propertiesRecursiveEach(hoge, (names, value) -> {
+        eachProperty(hoge, (names, value) -> {
             if ("myClasses".equals(names)) {
                 List<?> list = (List<Object>)value;
                 IntStream.range(0, list.size()).forEach(i -> {
@@ -52,7 +52,7 @@ class FunctionsTest {
         HogeSend hoge = new HogeSend("hoge", 100, null, new MyClassSend("kuso", 10, resource),
                 Arrays.asList(new MyClass2("aho", 1, null), new MyClass2("baka", 2, null)));
 
-        propertiesRecursiveEach(hoge, (name, value) -> {
+        eachProperty(hoge, (name, value) -> {
             System.out.println(name + ": " + value);
         });
     }
