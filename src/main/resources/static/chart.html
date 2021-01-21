@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.js" integrity="sha512-zO8oeHCxetPn1Hd9PdDleg5Tw1bAaP0YmNvPY8CwcRyUk7d7/+nyElmFrB6f7vg4f7Fv4sui1mcep8RIEShczg==" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
- </head>
+  <meta charset="UTF-8">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@0.5.7/chartjs-plugin-annotation.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.css">
+</head>
 <body>
   <span>
-    <canvas id="myChart" width="300" height="200" />
+    <canvas id="myChart" width="300" height="200"></canvas>
   </span>
   <label>label: <input id="label"></label>
   <label>value: <input id="value"></label>
@@ -14,28 +16,38 @@
   <script>
     const ctx = document.getElementById("myChart").getContext('2d');
     const myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ["赤", "青", "黄色", "緑", "紫", "橙"],
-            datasets: [{
-                label: '得票数',
-                data: [12, 19, 3, 5, 2, 3],
-                borderColor: 'rgba(255,99,132,1)',
-                borderWidth: 1,
-                fill: true,
-                lineTension: 0
-            }]
+      type: 'line',
+      data: {
+        labels: ["赤", "青", "黄色", "緑", "紫", "橙"],
+        datasets: [{
+          label: '得票数',
+          data: [12, 19, 3, 5, 2, 3],
+          borderColor: 'rgba(255,99,132,1)',
+          borderWidth: 1,
+          fill: true,
+          lineTension: 0
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero:true
+            }
+          }]
         },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true
-                    }
-                }]
-            },
-            responsive: false
+        responsive: false,
+        annotation: {
+          annotations: [
+            {
+              type: 'line',
+              mode: 'vertical',
+              scaleID: 'x-axis-0',
+              borderColor: 'black'
+            }
+          ]
         }
+      }
     });
 
     function* inf() {
@@ -62,6 +74,8 @@
         const value = myChart.data.datasets[target._datasetIndex].data[target._index];
         document.getElementById("label").value = label;
         document.getElementById("value").value = value;
+        myChart.options.annotation.annotations[0].value = target._index;
+        myChart.update();
       }
     });
   </script>
