@@ -53,17 +53,17 @@ const myChart = new Chart(ctx, {
       return (...args) => other(this(...args));
     };
 
-document.getElementById("myChart").addEventListener('click', function(evt) {
-  const evtSrc = myChart.getElementAtEvent(evt);
-  
-  if (evtSrc.length) {
-    const target = evtSrc[0];
-    const label = myChart.data.labels[target._index];
-    const value = myChart.data.datasets[target._datasetIndex].data[target._index];
-    document.getElementById("label").value = label;
-    document.getElementById("value").value = value;
-  }
-});
+    document.getElementById("myChart").addEventListener('click', function(evt) {
+      const evtSrc = myChart.getElementAtEvent(evt);
+
+      if (evtSrc.length) {
+        const target = evtSrc[0];
+        const label = myChart.data.labels[target._index];
+        const value = myChart.data.datasets[target._datasetIndex].data[target._index];
+        document.getElementById("label").value = label;
+        document.getElementById("value").value = value;
+      }
+    });
   </script>
 </body>
 </html>

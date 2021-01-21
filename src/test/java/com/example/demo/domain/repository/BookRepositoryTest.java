@@ -20,7 +20,7 @@ public class BookRepositoryTest {
     BookRepository bookRepository;
 
     @Test
-    @Sql(statements = "INSERT INTO Book(id, name, price) values(100000, 'Siring-framework step by step', '10')")
+    @Sql(statements = "INSERT INTO books(id, name, price) values(100000, 'Siring-framework step by step', '10')")
     void test() throws Exception {
 
         Optional<Book> book = bookRepository.findById(100000L);

@@ -37,7 +37,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 .csrf().disable().antMatcher("/**")
                 .authorizeRequests()
                     .antMatchers("/console/**").permitAll()
-                    .anyRequest().authenticated()
+                    .anyRequest().permitAll()
+//                    .anyRequest().authenticated()
 //                    .anyRequest().hasAnyRole("USER") // それ以外は全て認証無しの場合アクセス不許可
                 .and()
 //                .addFilterBefore(MyFilter(), BasicAuthenticationFilter::class.java)
