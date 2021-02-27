@@ -2,8 +2,8 @@ plugins {
     id 'org.springframework.boot' version '2.4.2'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
-    id 'org.jetbrains.kotlin.plugin.spring' version '1.4.10'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.30'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.4.30'
 }
 
 bootJar {
@@ -58,6 +58,7 @@ compileKotlin {
         jvmTarget = "11"
         freeCompilerArgs = ["-Xjsr305=strict"]
     }
+    kotlinOptions.useIR = true
 }
 
 compileTestKotlin {
