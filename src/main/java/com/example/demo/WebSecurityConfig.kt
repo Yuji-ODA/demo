@@ -16,6 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -34,16 +35,18 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
         // 認可の設定
         http
-                .csrf().disable().antMatcher("/**")
-                .authorizeRequests()
-                    .antMatchers("/console/**").permitAll()
-                    .anyRequest().permitAll()
-//                    .anyRequest().authenticated()
+            .csrf()
+                .csrfTokenRepository(CookieCsrfTokenRepository())
+            .and()
+            .authorizeRequests()
+                .antMatchers("/api/**", "/console/**").permitAll()
+//                    .anyRequest().permitAll()
+                .anyRequest().authenticated()
 //                    .anyRequest().hasAnyRole("USER") // それ以外は全て認証無しの場合アクセス不許可
-                .and()
+            .and()
 //                .addFilterBefore(MyFilter(), BasicAuthenticationFilter::class.java)
-                .addFilterBefore(MySecurityFilter(AntPathRequestMatcher("/book/**")), BasicAuthenticationFilter::class.java)
-                .addFilterBefore(MyFilter(AntPathRequestMatcher("/")), BasicAuthenticationFilter::class.java)
+            .addFilterBefore(MySecurityFilter(AntPathRequestMatcher("/book/**")), BasicAuthenticationFilter::class.java)
+            .addFilterBefore(MyFilter(AntPathRequestMatcher("/")), BasicAuthenticationFilter::class.java)
 //                .exceptionHandling().authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/login"))
 //                .exceptionHandling().accessDeniedHandler { request, response, accessDeniedException ->
 //                    response.sendRedirect("http://www.yahoo.co.jp")
@@ -52,7 +55,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 //                .and()
 //                .headers().frameOptions().disable()
 //                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     }
 
 //    @Configuration

@@ -1,9 +1,9 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.2'
+    id 'org.springframework.boot' version '2.4.7'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.30'
-    id 'org.jetbrains.kotlin.plugin.spring' version '1.4.30'
+    id 'org.jetbrains.kotlin.jvm' version '1.5.20'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.5.20'
 }
 
 bootJar {
@@ -13,13 +13,11 @@ bootJar {
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 11
-targetCompatibility = 11
 
 repositories {
 	mavenCentral()
     maven {
-        url "http://maven.codelibs.org"
+        url "https://maven.codelibs.org"
     }
 }
 
@@ -41,12 +39,14 @@ dependencies {
     implementation 'org.apache.httpcomponents:httpclient'
     implementation 'io.vavr:vavr:0.10.3'
     testImplementation('org.springframework.security:spring-security-test')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.junit.jupiter:junit-jupiter-api')
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
     compileOnly('org.projectlombok:lombok')
     testCompileOnly('org.projectlombok:lombok')
     annotationProcessor('org.projectlombok:lombok')
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
     runtimeOnly('org.webjars:jquery:3.3.1')
     runtimeOnly('org.webjars.npm:d3:5.9.2')
@@ -61,9 +61,9 @@ compileKotlin {
     kotlinOptions.useIR = true
 }
 
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "11"
-        freeCompilerArgs = ["-Xjsr305=strict"]
-    }
-}
+//compileTestKotlin {
+//    kotlinOptions {
+//        jvmTarget = "11"
+//        freeCompilerArgs = ["-Xjsr305=strict"]
+//    }
+//}

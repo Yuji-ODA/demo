@@ -64,6 +64,8 @@ public class Post2Controller {
         return responseEntity.getBody();
     }
 
+
+
     @InitBinder("hoge")
     public void bindValues(WebDataBinder binder, HttpServletRequest req) {
         MutablePropertyValues values = new MutablePropertyValues();
@@ -81,7 +83,7 @@ public class Post2Controller {
     }
 
     @PostMapping
-    public String recvData(@ModelAttribute Hoge hoge) throws IOException {
+    public String recvData(@ModelAttribute("hoge") Hoge hoge) throws IOException {
         System.out.println(hoge);
         return objectMapper.writeValueAsString(hoge);
     }

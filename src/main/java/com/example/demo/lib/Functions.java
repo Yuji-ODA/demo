@@ -1,16 +1,21 @@
 package com.example.demo.lib;
 
+import io.vavr.CheckedFunction0;
+import io.vavr.PartialFunction;
+import io.vavr.control.Try;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.lang.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
+import java.util.function.Function;
+
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Functions {
@@ -70,5 +75,20 @@ public final class Functions {
         });
     }
 
-}
+    public static boolean isValidUUID(@Nullable String input) {
+        return Optional.ofNullable(input)
+//                .map(Try::success)
+//                .map(liftTry(UUID::fromString))
+//                .map(i -> Try.ofSupplier(() -> UUID.fromString(i)))
+                .<CheckedFunction0<UUID>>map(i -> () -> UUID.fromString(i))
+                .map(Try::of)
+                .map(Try::isSuccess)
+                .orElse(true);
+    }
 
+    private static <T, R> Function<Try<T>, Try<R>> liftTry(Function<? super T, ? extends R> f) {
+        return tr -> tr.map(f);
+    }
+
+    PartialFunction<Integer, String> pf = Case($(0), "zero");
+}

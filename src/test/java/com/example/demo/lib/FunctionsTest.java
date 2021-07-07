@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 import static com.example.demo.lib.Functions.eachProperty;
+import static com.example.demo.lib.Functions.isValidUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FunctionsTest {
@@ -124,5 +125,12 @@ class FunctionsTest {
         String hoge(Integer t1) {
             return t1.toString();
         }
+    }
+
+    @Test
+    void testIsValidUUID() {
+        assertThat(isValidUUID("3F2504E0-4F89-11D3-9A0C-0305E82C3301")).isTrue();
+        assertThat(isValidUUID("hoge")).isFalse();
+        assertThat(isValidUUID(null)).isTrue();
     }
 }
