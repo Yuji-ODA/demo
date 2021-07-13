@@ -64,7 +64,7 @@ class FunctionsTest {
         BiFunction<Integer, Long, String> bifun = FunctionsTest::fun;
         BiFunction<Cls, Integer, String> bifun2 = Cls::hoge;
 
-        Huga huga = Huga.of(1, 1.56F, "search");
+        JavaHuga huga = JavaHuga.of(1, 1.56F, "search");
         System.out.println(new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT).writeValueAsString(huga));
     }
 

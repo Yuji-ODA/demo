@@ -6,10 +6,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
-class SupplierMonadTest {
+class MonadicSupplierTest {
     @Test
     void testOfSupplier() {
-        Supplier<LocalDateTime> localDateTimeSupplier = SupplierMonad.of(LocalDate::now).map(LocalDate::atStartOfDay);
+        Supplier<LocalDateTime> localDateTimeSupplier = MonadicSupplier.of(LocalDate::now).map(LocalDate::atStartOfDay);
 
         System.out.println(localDateTimeSupplier.get());
     }

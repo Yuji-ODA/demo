@@ -39,6 +39,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 .csrfTokenRepository(CookieCsrfTokenRepository())
             .and()
             .authorizeRequests()
+                .antMatchers("/**").hasIpAddress("127.0.0.0/8")
                 .antMatchers("/api/**", "/console/**").permitAll()
 //                    .anyRequest().permitAll()
                 .anyRequest().authenticated()

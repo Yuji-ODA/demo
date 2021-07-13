@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Profile
 
 @Configuration
 @Profile("local")
-open class LocalWebConfig {
+class LocalWebConfig {
 
     @Bean
-    internal open fun h2servletRegistration(): ServletRegistrationBean<*> {
+    fun h2servletRegistration(): ServletRegistrationBean<*> {
         val registrationBean = ServletRegistrationBean(WebServlet())
         registrationBean.addUrlMappings("/console/*")
         return registrationBean

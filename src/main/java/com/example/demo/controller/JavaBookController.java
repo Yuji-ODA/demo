@@ -1,4 +1,4 @@
-package com.example.demo.app;
+package com.example.demo.controller;
 
 import com.example.demo.Preference;
 import com.example.demo.app.form.BookForm;
@@ -27,10 +27,10 @@ import org.springframework.web.servlet.ModelAndView;
 import java.security.Principal;
 
 @Controller
-@RequestMapping(path = "/book")
+@RequestMapping(path = "/java-book")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class BookController {
+public class JavaBookController {
 
     BookService bookService;
 

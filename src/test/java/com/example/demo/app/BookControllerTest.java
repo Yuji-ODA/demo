@@ -2,6 +2,7 @@ package com.example.demo.app;
 
 
 import com.example.demo.Preference;
+import com.example.demo.controller.JavaBookController;
 import com.example.demo.domain.repository.BookRepository;
 import com.example.demo.domain.service.BookService;
 import org.junit.jupiter.api.AfterEach;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith({SpringExtension.class})
-@WebMvcTest(controllers = BookController.class)
+@WebMvcTest(controllers = JavaBookController.class)
 @WithMockUser
 class BookControllerTest {
 
@@ -48,7 +49,7 @@ class BookControllerTest {
 
     @Test
     void test() throws Exception {
-        mvc.perform(get("/book").contentType("text/html"))
+        mvc.perform(get("/java-book").contentType("text/html"))
                 .andExpect(view().name("book"))
                 .andExpect(content().string(containsString("新規図書")))
                 .andExpect(content().string(containsString("0.1")))
@@ -57,7 +58,7 @@ class BookControllerTest {
 
     @Test
     void testPost() throws Exception {
-        mvc.perform(post("/book").contentType("text/html")
+        mvc.perform(post("/java-book").contentType("text/html")
                     .param("name","ABookName")
                     .param("price","10.12")
                 )
