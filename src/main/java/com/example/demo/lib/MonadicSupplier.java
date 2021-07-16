@@ -3,6 +3,7 @@ package com.example.demo.lib;
 import io.vavr.collection.List;
 
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -27,7 +28,7 @@ public interface MonadicSupplier<T> extends Supplier<T> {
     }
 
     default <U> MonadicSupplier<U> flatMap(Function<? super T, ? extends MonadicSupplier<U>> f) {
-        return map(f).get();
+        return () -> map(f).get().get();
 //        return () -> f.apply(get()).get();
 //        return f.apply(get());
 //        return compose(f, SupplierMonad::unit).apply(get());
@@ -44,5 +45,13 @@ public interface MonadicSupplier<T> extends Supplier<T> {
 
     default <U> MonadicSupplier<U> apply(MonadicSupplier<Function<? super T, ? extends U>> mtu) {
         return () -> mtu.get().apply(get());
+    }
+
+    default MonadicSupplier<T> peek(Consumer<? super T> consumer) {
+        return () -> {
+            T t = get();
+            consumer.accept(t);
+            return t;
+        };
     }
 }
