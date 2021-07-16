@@ -26,5 +26,6 @@ class BookController(private val bookService: BookService,
         price = 0.1
     }
 
-    data class Hoge(val huga: Float)
 }
+
+data class Hoge(val huga: Float)

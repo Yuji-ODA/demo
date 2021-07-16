@@ -25,7 +25,5 @@ class HogeTest {
         System.out.println(Huga.Companion.dead().getBeType());
 
         new ObjectMapper().writeValue(System.out, Huga.Companion.dead());
-
-        assert true;
     }
 }

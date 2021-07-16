@@ -1,5 +1,7 @@
 package com.example.demo.lib;
 
+import io.vavr.collection.List;
+
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -11,28 +13,36 @@ public interface MonadicSupplier<T> extends Supplier<T> {
         return supplier::get;
     }
 
-    static <T> MonadicSupplier<T> ofValue(T value) {
+    static <T> MonadicSupplier<T> of(T value) {
         return () -> value;
     }
 
-    static <T, U, W> Function<T, MonadicSupplier<W>> compose(Function<T, MonadicSupplier<U>> f,
-                                                             Function<U, MonadicSupplier<W>> g) {
+    static <T> MonadicSupplier<List<T>> sequence(List<? extends MonadicSupplier<T>> list) {
+        return () -> list.foldRight(List.empty(), (m, acc) -> acc.prepend(m.get()));
+    }
+
+    static <T, U, W> Function<T, MonadicSupplier<W>> compose(Function<? super T, ? extends MonadicSupplier<U>> f,
+                                                             Function<? super U, ? extends MonadicSupplier<W>> g) {
         return t -> g.apply(f.apply(t).get());
     }
 
-    default <U> MonadicSupplier<U> flatMap(Function<T, MonadicSupplier<U>> f) {
+    default <U> MonadicSupplier<U> flatMap(Function<? super T, ? extends MonadicSupplier<U>> f) {
         return map(f).get();
 //        return () -> f.apply(get()).get();
 //        return f.apply(get());
 //        return compose(f, SupplierMonad::unit).apply(get());
     }
 
-    default <U> MonadicSupplier<U> map(Function<T, U> f) {
+    default <U> MonadicSupplier<U> map(Function<? super T, ? extends U> f) {
         return () -> f.apply(get());
 //        return flatMap(t -> unit(f.apply(t)));
     }
 
     default <U, W> MonadicSupplier<W> merge(MonadicSupplier<U> other, BiFunction<T, U, W> f) {
         return flatMap(t -> other.map(u -> f.apply(t, u)));
+    }
+
+    default <U> MonadicSupplier<U> apply(MonadicSupplier<Function<? super T, ? extends U>> mtu) {
+        return () -> mtu.get().apply(get());
     }
 }
