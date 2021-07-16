@@ -4,32 +4,45 @@ import io.vavr.collection.List;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
-@FunctionalInterface
-public interface ScopeFunction<T> extends Supplier<T> {
+public class ScopeFunction<T> {
 
-    static <T> ScopeFunction<T> with(Supplier<T> supplier) {
-        return supplier::get;
+    public static <T, U> U with(T t, Function<? super T, ? extends U> f) {
+        return of(t).map(f).value;
     }
 
-    static <T> ScopeFunction<T> apply(Supplier<? extends T> supplier, Consumer<? super T> consumer) {
-        return () -> {
-            T t = supplier.get();
-            consumer.accept(t);
-            return t;
-        };
+    public static <T> T apply(T t, Consumer<? super T> cb) {
+        return of(t).peek(cb).value;
+    }
+
+    private final T value;
+
+    private ScopeFunction(T t) {
+        this.value = t;
+    }
+
+    public static <T> ScopeFunction<T> of(T t) {
+        return new ScopeFunction<>(t);
     }
 
     static <T> ScopeFunction<List<T>> sequence(List<ScopeFunction<T>> list) {
-        return () -> list.foldRight(List.empty(), (s, acc) -> acc.prepend(s.get()));
+        return of(list.foldRight(List.empty(), (s, acc) -> acc.prepend(s.value)));
     }
 
-    default <U> U eval(Function<? super T, ? extends U> f) {
-        return f.apply(get());
+    public T getValue() {
+        return value;
     }
 
-    default <U> ScopeFunction<U> map(Function<? super T, ? extends U> f) {
-        return () -> eval(f);
+    public <U> ScopeFunction<U> map(Function<? super T, ? extends U> f) {
+        return of(f.apply(value));
+    }
+
+    public ScopeFunction<T> peek(Consumer<? super T> consumer) {
+        consumer.accept(value);
+        return of(value);
+    }
+
+    public <U> ScopeFunction<U> flatMap(Function<? super T, ? extends ScopeFunction<U>> f) {
+        return map(f).value;
     }
 }
