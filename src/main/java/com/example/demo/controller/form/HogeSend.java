@@ -2,21 +2,22 @@ package com.example.demo.controller.form;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Value;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.util.List;
 
-@Data
+@Value
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class HogeSend {
-    private String myName;
-    private int seqNo;
-    private ByteArrayResource file;
-    private MyClassSend myClass;
-    private List<MyClass2> myClasses;
+    String myName;
+    int seqNo;
+    ByteArrayResource file;
+    MyClassSend myClass;
+    List<MyClass2> myClasses;
 }
