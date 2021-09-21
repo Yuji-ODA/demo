@@ -13,10 +13,7 @@ public class BookCommand implements TransactionCommand<BookService> {
     private final Book book;
 
     public static BookCommand fromBookForm(BookForm bookForm) {
-        return new BookCommand(Book.builder()
-                .name(bookForm.getName())
-                .price(bookForm.getPrice())
-                .build());
+        return new BookCommand(Book.of(bookForm.getName(), bookForm.getPrice()));
     }
 
     @Override
