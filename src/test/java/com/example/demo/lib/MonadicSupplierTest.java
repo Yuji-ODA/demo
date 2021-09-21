@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 class MonadicSupplierTest {
     @Test
     void testOfSupplier() {
-        Supplier<LocalDateTime> localDateTimeSupplier = MonadicSupplier.of(LocalDate.now()).map(LocalDate::atStartOfDay);
+        Supplier<LocalDateTime> localDateTimeSupplier = MonadicSupplier.of(LocalDate::now).map(LocalDate::atStartOfDay);
 
         System.out.println(localDateTimeSupplier.get());
     }

@@ -7,9 +7,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.data.domain.Range;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +27,9 @@ import java.util.stream.IntStream;
 import static com.example.demo.lib.Functions.eachProperty;
 import static com.example.demo.lib.Functions.isValidUUID;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.data.domain.Range.Bound.*;
 
 class FunctionsTest {
 
@@ -132,5 +140,22 @@ class FunctionsTest {
         assertThat(isValidUUID("3F2504E0-4F89-11D3-9A0C-0305E82C3301")).isTrue();
         assertThat(isValidUUID("hoge")).isFalse();
         assertThat(isValidUUID(null)).isTrue();
+    }
+
+    @Test
+    void testLocalDate() {
+        Range<ChronoLocalDate> range = Range.leftOpen(LocalDate.now().minusDays(1), LocalDate.now().plusDays(1));
+        assertFalse(range.contains(LocalDate.now().minusDays(2)));
+        assertFalse(range.contains(LocalDate.now().minusDays(1)));
+        assertTrue(range.contains(LocalDate.now()));
+        assertTrue(range.contains(LocalDate.now().plusDays(1)));
+        assertFalse(range.contains(LocalDate.now().plusDays(2)));
+
+        Range<ChronoLocalDateTime<?>> range2 = Range.from(inclusive(LocalDateTime.now().minusDays(1)))
+                .to(exclusive(LocalDateTime.now()));
+        assertFalse(range2.contains(LocalDateTime.now()));
+
+        Range<ChronoLocalDateTime<?>> range3 = Range.from(inclusive(LocalDateTime.now()))
+                .to(unbounded());
     }
 }

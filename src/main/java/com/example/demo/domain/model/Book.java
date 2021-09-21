@@ -1,32 +1,38 @@
 package com.example.demo.domain.model;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.Builder;
+import lombok.Value;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "books")
-@Data
-@AllArgsConstructor(staticName = "of")
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Value
+@AllArgsConstructor
+@Builder
 public class Book {
+
+    Book() {
+        id = null;
+        name = null;
+        price = 0;
+        createdAt = null;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private long id;
+    Long id;
 
     @Column(nullable = false)
-    private String name;
+    String name;
 
     @Column(nullable = false)
-    private double price;
+    double price;
 
-    @Column(nullable = false)
-    @CreatedDate
-    private LocalDateTime createdAt;
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    LocalDateTime createdAt;
 }

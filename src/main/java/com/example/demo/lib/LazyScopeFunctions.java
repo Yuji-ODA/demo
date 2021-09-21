@@ -6,11 +6,11 @@ import java.util.function.Supplier;
 
 public final class LazyScopeFunctions<T> {
 
-    static <T, U> U with(Supplier<T> supplier, Function<? super T, ? extends U> f) {
+    public static <T, U> U with(Supplier<? extends T> supplier, Function<? super T, ? extends U> f) {
         return MonadicSupplier.of(supplier).map(f).get();
     }
 
-    static <T> T apply(Supplier<T> supplier, Consumer<? super T> cb) {
+    public static <T> T apply(Supplier<? extends T> supplier, Consumer<? super T> cb) {
         return MonadicSupplier.of(supplier).peek(cb).get();
     }
 

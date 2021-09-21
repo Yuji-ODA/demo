@@ -34,16 +34,13 @@ dependencies {
 	implementation('mysql:mysql-connector-java')
     implementation('org.codelibs:lucene-analyzers-kuromoji-ipadic-neologd:8.0.0-20190722')
     implementation('org.flywaydb:flyway-core')
-    implementation "org.functionaljava:functionaljava:4.8"
-    implementation "org.functionaljava:functionaljava-java8:4.8"
-    implementation "org.functionaljava:functionaljava-quickcheck:4.8"
-    implementation "org.functionaljava:functionaljava-java-core:4.8"
     implementation 'org.apache.httpcomponents:httpclient'
     implementation 'io.vavr:vavr:0.10.3'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0'
     testImplementation('org.springframework.security:spring-security-test')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.junit.jupiter:junit-jupiter-api')
+    testImplementation 'io.vavr:vavr-test:0.10.3'
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")

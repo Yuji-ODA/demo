@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.Preference;
 import com.example.demo.app.form.BookForm;
+import com.example.demo.domain.repository.BookRepository;
 import com.example.demo.domain.service.BookService;
 import com.example.demo.domain.service.command.BookCommand;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,6 +39,8 @@ public class JavaBookController {
 
     ObjectMapper objectMapper;
 
+    BookRepository repository;
+
     private String getUsername(WebRequest webRequest) {
         Principal principal = webRequest.getUserPrincipal();
         if (principal != null)
@@ -61,7 +64,7 @@ public class JavaBookController {
     }
 
 
-    @GetMapping(path = "")
+    @GetMapping
     public String book(Authentication authentication, BookForm bookForm, Model model) {
         try {
             Hoge hoge = objectMapper.readValue("{\"huga\": \"1.25\"}}", Hoge.class);
@@ -76,7 +79,7 @@ public class JavaBookController {
         return "book";
     }
 
-    @PostMapping(path = "")
+    @PostMapping
     public ModelAndView createNewBook(WebRequest webRequest, @Validated BookForm bookForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ModelAndView("book", HttpStatus.BAD_REQUEST);
@@ -87,4 +90,9 @@ public class JavaBookController {
         return new ModelAndView("book");
     }
 
+    @GetMapping(path = "list")
+    public String bookList(Authentication authentication, Model model) {
+        repository.findAll().forEach(System.out::println);
+        return "book";
+    }
 }
