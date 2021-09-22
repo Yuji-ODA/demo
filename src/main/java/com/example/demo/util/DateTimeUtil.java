@@ -14,7 +14,7 @@ public final class DateTimeUtil {
     }
 
     public static OffsetDateTime localDateTime2offsetDateTime(LocalDateTime from) {
-        return localDateTime2zonedDateTime(from).toOffsetDateTime();
+        return OffsetDateTime.of(from, defaultZoneOffset());
     }
 
     public static LocalDateTime offsetDateTime2LocalDateTime(OffsetDateTime from) {
@@ -30,6 +30,14 @@ public final class DateTimeUtil {
     }
 
     public static Date localDate2Date(LocalDate localDate) {
-        return Date.from(localDateTime2zonedDateTime(localDate.atStartOfDay()).toInstant());
+        return Date.from(localDate.atStartOfDay().toInstant(defaultZoneOffset()));
+    }
+
+    public static java.sql.Date localDate2SqlDate(LocalDate localDate) {
+        return java.sql.Date.valueOf(localDate);
+    }
+
+    public static ZoneOffset defaultZoneOffset() {
+        return ZoneId.systemDefault().getRules().getOffset(LocalDateTime.MAX);
     }
 }

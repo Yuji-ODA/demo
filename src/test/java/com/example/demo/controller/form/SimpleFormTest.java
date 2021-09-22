@@ -10,9 +10,9 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
+import java.time.ZoneOffset;
 
-import static com.example.demo.util.DateTimeUtil.offsetDateTime2LocalDateTime;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @Import(Jackson2ObjectMapperBuilder.class)
@@ -29,19 +29,21 @@ class SimpleFormTest {
 
     @Test
     void serialize() throws Exception {
-        OffsetDateTime now = OffsetDateTime.now();
-        SimpleForm target = new SimpleForm(1, "ダミー", "ｍｙFile", now, now);
-        mapper.writeValue(System.out, target);
+        OffsetDateTime given = OffsetDateTime.of(2021, 9, 22, 9, 0, 0, 0, ZoneOffset.ofHours(9));
+        SimpleForm target = new SimpleForm(1, "ダミー", "ｍｙFile", given, given);
+        assertThat(mapper.writeValueAsString(target))
+                .isEqualTo("{\"id\":1,\"name\":\"ダミー\",\"home_address\":\"ｍｙFile\",\"created_at\":\"2021-09-22T09:00:00.000000+0900\",\"updated_at\":\"2021-09-22T09:00:00.000000+09:00\"}");
     }
 
     @Test
     void deserialize() throws Exception {
         String serialized = "{\"id\":1,\"name\":\"ダミー\",\"home_address\":\"ｍ" +
-                "ｙFile\",\"created_at\":\"2021-09-21T14:56:21.062734+09:00\",\"updated_at\":\"2021-09-21T14:56:21.062734+09:00\"}";
-        SimpleForm form = mapper.readValue(serialized, SimpleForm.class);
-        System.out.println(form);
-        System.out.println(offsetDateTime2LocalDateTime(form.getCreatedAt()));
-        System.out.println(offsetDateTime2LocalDateTime(form.getUpdatedAt()));
-        System.out.println(ZonedDateTime.now().toLocalDateTime());
+                "ｙFile\",\"created_at\":\"2020-05-31T00:00:00.000000+0900\",\"updated_at\":\"2021-09-21T14:56:21.062734+09:00\"}";
+        SimpleForm actual = mapper.readValue(serialized, SimpleForm.class);
+        assertThat(actual).hasFieldOrPropertyWithValue("id", 1)
+                .hasFieldOrPropertyWithValue("name", "ダミー")
+                .hasFieldOrPropertyWithValue("homeAddress", "ｍｙFile")
+                .hasFieldOrPropertyWithValue("createdAt", OffsetDateTime.of(2020, 5, 30, 15, 0, 0, 0, ZoneOffset.UTC))
+                .hasFieldOrPropertyWithValue("updatedAt", OffsetDateTime.of(2021, 9, 21, 5, 56, 21, 62_734_000, ZoneOffset.UTC));
     }
 }

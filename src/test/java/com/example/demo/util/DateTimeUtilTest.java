@@ -1,33 +1,48 @@
 package com.example.demo.util;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.Date;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class DateTimeUtilTest {
 
+    static OffsetDateTime offsetDateTime;
+    static ZonedDateTime zonedDateTime;
+    static LocalDateTime localDateTime;
+
+    @BeforeAll
+    static void setupStatic() {
+        offsetDateTime = OffsetDateTime.of(2021, 9, 21, 9, 0, 0, 0, ZoneOffset.ofHours(9));
+        localDateTime = LocalDateTime.of(2021, 9, 21, 9, 0, 0, 0);
+        zonedDateTime = offsetDateTime.toZonedDateTime();
+    }
+
     @Test
     void localDateTime2zonedDateTime() {
-        System.out.println(DateTimeUtil.localDateTime2zonedDateTime(LocalDateTime.now()));
+        assertThat(DateTimeUtil.localDateTime2zonedDateTime(localDateTime))
+                .isEqualTo(zonedDateTime);
     }
 
     @Test
     void localDateTime2offsetDateTime() {
-        System.out.println(DateTimeUtil.localDateTime2offsetDateTime(LocalDateTime.now()));
+        assertThat(DateTimeUtil.localDateTime2offsetDateTime(localDateTime))
+                .isEqualTo(offsetDateTime);
     }
 
     @Test
     void offsetDateTime2LocalDateTime() {
-        System.out.println(DateTimeUtil.offsetDateTime2LocalDateTime(OffsetDateTime.now()));
+        assertThat(DateTimeUtil.offsetDateTime2LocalDateTime(offsetDateTime))
+                .isEqualTo(localDateTime);
     }
 
     @Test
     void zonedDateTime2LocalDateTime() {
-        System.out.println(DateTimeUtil.zonedDateTime2LocalDateTime(ZonedDateTime.now()));
+        assertThat(DateTimeUtil.zonedDateTime2LocalDateTime(zonedDateTime))
+                .isEqualTo(localDateTime);
     }
 
     @Test
