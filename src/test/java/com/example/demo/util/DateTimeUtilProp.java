@@ -9,6 +9,7 @@ import net.jqwik.time.api.DateTimes;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import static com.example.demo.PropTestUtil.packWithAnswer;
@@ -36,6 +37,9 @@ class DateTimeUtilProp {
     void localDateTime_is_correctly_converted_to_OffsetDateTime(@ForAll("localAndOffset") Tuple2<LocalDateTime, OffsetDateTime> given) {
         OffsetDateTime actual = toOffsetDateTime(given.get1());
         OffsetDateTime expected = given.get2();
+
+        System.out.printf("given: %s, answer: %s, actual: %s, expected: %s%n", given.get1(), given.get2(), actual, expected);
+
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -54,11 +58,11 @@ class DateTimeUtilProp {
 
     @Provide
     Arbitrary<Tuple2<LocalDateTime, ZonedDateTime>> localAndZoned() {
-        return localDateTimes().map(packWithAnswer(PropTestUtil.localDateToZonedDateTime()));
+        return localDateTimes().map(packWithAnswer(PropTestUtil.localDateToZonedDateTime(ZoneOffset.UTC)));
     }
 
     @Provide
     Arbitrary<Tuple2<LocalDateTime, OffsetDateTime>> localAndOffset() {
-        return localDateTimes().map(packWithAnswer(PropTestUtil.localDateToOffsetDateTime()));
+        return localDateTimes().map(packWithAnswer(PropTestUtil.localDateToOffsetDateTime(ZoneOffset.UTC)));
     }
 }
