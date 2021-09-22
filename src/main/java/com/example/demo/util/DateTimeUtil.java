@@ -38,6 +38,6 @@ public final class DateTimeUtil {
     }
 
     public static ZoneOffset defaultZoneOffset() {
-        return ZoneId.systemDefault().getRules().getOffset(LocalDateTime.MAX);
+        return ZoneId.systemDefault().getRules().getOffset(LocalDateTime.now());
     }
 }

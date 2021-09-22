@@ -3,8 +3,12 @@ package com.example.demo.util;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.time.*;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,12 +17,16 @@ class DateTimeUtilTest {
     static OffsetDateTime offsetDateTime;
     static ZonedDateTime zonedDateTime;
     static LocalDateTime localDateTime;
+    static Date date;
+    static java.sql.Date sqlDate;
 
     @BeforeAll
     static void setupStatic() {
         offsetDateTime = OffsetDateTime.of(2021, 9, 21, 9, 0, 0, 0, ZoneOffset.ofHours(9));
+        zonedDateTime = ZonedDateTime.of(2021, 9, 21, 9, 0, 0, 0, ZoneOffset.ofHours(9));
         localDateTime = LocalDateTime.of(2021, 9, 21, 9, 0, 0, 0);
-        zonedDateTime = offsetDateTime.toZonedDateTime();
+        date = new GregorianCalendar(2021, 8, 21).getTime();
+        sqlDate = new java.sql.Date(date.getTime());
     }
 
     @Test
@@ -47,11 +55,25 @@ class DateTimeUtilTest {
 
     @Test
     void date2LocalDate() {
-        System.out.println(DateTimeUtil.date2LocalDate(new Date()));
+        assertThat(DateTimeUtil.date2LocalDate(date))
+                .isEqualTo(localDateTime.toLocalDate());
     }
 
     @Test
     void localDate2Date() {
-        System.out.println(DateTimeUtil.localDate2Date(LocalDate.now()));
+        assertThat(DateTimeUtil.localDate2Date(localDateTime.toLocalDate()))
+                .isEqualTo(date);
+    }
+
+    @Test
+    void localDate2SqlDate() {
+        assertThat(DateTimeUtil.localDate2SqlDate(localDateTime.toLocalDate()))
+                .isEqualTo(sqlDate);
+    }
+
+    @Test
+    void defaultZoneOffset() {
+        assertThat(DateTimeUtil.defaultZoneOffset())
+                .isEqualTo(ZoneOffset.ofHours(9));
     }
 }
