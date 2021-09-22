@@ -27,9 +27,9 @@ class DateTimeUtilProp {
     }
 
     @Property
-    void zonedDateTime_is_correctly_converted_to_LocalDateTime(@ForAll("localAndZoned") Tuple2<LocalDateTime, ZonedDateTime> given) {
-        LocalDateTime actual = toLocalDateTime(given.get2());
-        LocalDateTime expected = given.get1();
+    void zonedDateTime_is_correctly_converted_to_LocalDateTime(@ForAll("zonedAndLocal") Tuple2<ZonedDateTime, LocalDateTime> given) {
+        LocalDateTime actual = toLocalDateTime(given.get1());
+        LocalDateTime expected = given.get2();
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -37,32 +37,36 @@ class DateTimeUtilProp {
     void localDateTime_is_correctly_converted_to_OffsetDateTime(@ForAll("localAndOffset") Tuple2<LocalDateTime, OffsetDateTime> given) {
         OffsetDateTime actual = toOffsetDateTime(given.get1());
         OffsetDateTime expected = given.get2();
-
-        System.out.printf("given: %s, answer: %s, actual: %s, expected: %s%n", given.get1(), given.get2(), actual, expected);
-
         assertThat(actual).isEqualTo(expected);
     }
 
     @Property
-    void offsetDateTime_is_correctly_converted_to_LocalDateTime(@ForAll("localAndOffset") Tuple2<LocalDateTime, OffsetDateTime> given) {
-        LocalDateTime actual = toLocalDateTime(given.get2());
-        LocalDateTime expected = given.get1();
+    void offsetDateTime_is_correctly_converted_to_LocalDateTime(@ForAll("offsetAndLocal") Tuple2<OffsetDateTime, LocalDateTime> given) {
+        LocalDateTime actual = toLocalDateTime(given.get1());
+        LocalDateTime expected = given.get2();
         assertThat(actual).isEqualTo(expected);
     }
 
 
     @Provide
-    Arbitrary<LocalDateTime> localDateTimes() {
-        return DateTimes.dateTimes();
-    }
-
-    @Provide
     Arbitrary<Tuple2<LocalDateTime, ZonedDateTime>> localAndZoned() {
-        return localDateTimes().map(packWithAnswer(PropTestUtil.localDateToZonedDateTime(ZoneOffset.UTC)));
+        return DateTimes.dateTimes()
+                .map(packWithAnswer(PropTestUtil.localDateToZonedDateTime(ZoneOffset.UTC)));
     }
 
     @Provide
     Arbitrary<Tuple2<LocalDateTime, OffsetDateTime>> localAndOffset() {
-        return localDateTimes().map(packWithAnswer(PropTestUtil.localDateToOffsetDateTime(ZoneOffset.UTC)));
+        return DateTimes.dateTimes()
+                .map(packWithAnswer(PropTestUtil.localDateToOffsetDateTime(ZoneOffset.UTC)));
+    }
+
+    @Provide
+    Arbitrary<Tuple2<ZonedDateTime, LocalDateTime>> zonedAndLocal() {
+        return localAndZoned().map(PropTestUtil::reverse);
+    }
+
+    @Provide
+    Arbitrary<Tuple2<OffsetDateTime, LocalDateTime>> offsetAndLocal() {
+        return localAndOffset().map(PropTestUtil::reverse);
     }
 }
