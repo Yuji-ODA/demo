@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static com.example.demo.util.DateTimeUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DateTimeUtilTest {
@@ -32,43 +33,43 @@ class DateTimeUtilTest {
 
     @Test
     void localDateTime2zonedDateTime() {
-        assertThat(DateTimeUtil.localDateTime2zonedDateTime(localDateTime))
+        assertThat(toZonedDateTime(localDateTime))
                 .isEqualTo(zonedDateTime);
     }
 
     @Test
     void localDateTime2offsetDateTime() {
-        assertThat(DateTimeUtil.localDateTime2offsetDateTime(localDateTime))
+        assertThat(toOffsetDateTime(localDateTime))
                 .isEqualTo(offsetDateTime);
     }
 
     @Test
     void offsetDateTime2LocalDateTime() {
-        assertThat(DateTimeUtil.offsetDateTime2LocalDateTime(offsetDateTime))
+        assertThat(toLocalDateTime(offsetDateTime))
                 .isEqualTo(localDateTime);
     }
 
     @Test
     void zonedDateTime2LocalDateTime() {
-        assertThat(DateTimeUtil.zonedDateTime2LocalDateTime(zonedDateTime))
+        assertThat(toLocalDateTime(zonedDateTime))
                 .isEqualTo(localDateTime);
     }
 
     @Test
     void date2LocalDate() {
-        assertThat(DateTimeUtil.date2LocalDate(date))
+        assertThat(toLocalDate(date))
                 .isEqualTo(localDateTime.toLocalDate());
     }
 
     @Test
     void localDate2Date() {
-        assertThat(DateTimeUtil.localDate2Date(localDateTime.toLocalDate()))
+        assertThat(toDate(localDateTime.toLocalDate()))
                 .isEqualTo(date);
     }
 
     @Test
     void localDate2SqlDate() {
-        assertThat(DateTimeUtil.localDate2SqlDate(localDateTime.toLocalDate()))
+        assertThat(toSqlDate(localDateTime.toLocalDate()))
                 .isEqualTo(sqlDate);
     }
 }

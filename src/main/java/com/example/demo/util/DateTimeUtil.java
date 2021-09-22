@@ -16,7 +16,7 @@ public final class DateTimeUtil {
      * @return 変換されたZonedDateTime
      */
     @NonNull
-    public static ZonedDateTime localDateTime2zonedDateTime(@NonNull LocalDateTime from) {
+    public static ZonedDateTime toZonedDateTime(@NonNull LocalDateTime from) {
         return from.atZone(ZoneId.systemDefault());
     }
 
@@ -26,7 +26,7 @@ public final class DateTimeUtil {
      * @return 変換されたLocalDateTime
      */
     @NonNull
-    public static LocalDateTime zonedDateTime2LocalDateTime(@NonNull ZonedDateTime from) {
+    public static LocalDateTime toLocalDateTime(@NonNull ZonedDateTime from) {
         return LocalDateTime.ofInstant(from.toInstant(), ZoneId.systemDefault());
     }
 
@@ -36,8 +36,8 @@ public final class DateTimeUtil {
      * @return 変換されたOffsetDateTime
      */
     @NonNull
-    public static OffsetDateTime localDateTime2offsetDateTime(@NonNull LocalDateTime from) {
-        return localDateTime2zonedDateTime(from).toOffsetDateTime();
+    public static OffsetDateTime toOffsetDateTime(@NonNull LocalDateTime from) {
+        return toZonedDateTime(from).toOffsetDateTime();
     }
 
     /**
@@ -46,7 +46,7 @@ public final class DateTimeUtil {
      * @return 変換されたLocalDateTime
      */
     @NonNull
-    public static LocalDateTime offsetDateTime2LocalDateTime(@NonNull OffsetDateTime from) {
+    public static LocalDateTime toLocalDateTime(@NonNull OffsetDateTime from) {
         return LocalDateTime.ofInstant(from.toInstant(), ZoneId.systemDefault());
     }
 
@@ -56,7 +56,7 @@ public final class DateTimeUtil {
      * @return 変換されたLocalDate
      */
     @NonNull
-    public static LocalDate date2LocalDate(@NonNull Date from) {
+    public static LocalDate toLocalDate(@NonNull Date from) {
         return from.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
@@ -66,8 +66,8 @@ public final class DateTimeUtil {
      * @return 変換されたjava.util.Date
      */
     @NonNull
-    public static Date localDate2Date(@NonNull LocalDate from) {
-        return Date.from(localDateTime2zonedDateTime(from.atStartOfDay()).toInstant());
+    public static Date toDate(@NonNull LocalDate from) {
+        return Date.from(toZonedDateTime(from.atStartOfDay()).toInstant());
     }
 
     /**
@@ -76,7 +76,7 @@ public final class DateTimeUtil {
      * @return 変換されたjava.sql.Date
      */
     @NonNull
-    public static java.sql.Date localDate2SqlDate(@NonNull LocalDate from) {
+    public static java.sql.Date toSqlDate(@NonNull LocalDate from) {
         return java.sql.Date.valueOf(from);
     }
 }
