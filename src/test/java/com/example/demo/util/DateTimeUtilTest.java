@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -22,10 +23,10 @@ class DateTimeUtilTest {
 
     @BeforeAll
     static void setupStatic() {
-        offsetDateTime = OffsetDateTime.of(2021, 9, 21, 9, 0, 0, 0, ZoneOffset.ofHours(9));
-        zonedDateTime = ZonedDateTime.of(2021, 9, 21, 9, 0, 0, 0, ZoneOffset.ofHours(9));
+        offsetDateTime = OffsetDateTime.of(2021, 9, 21, 0, 0, 0, 0, ZoneOffset.UTC);
+        zonedDateTime = ZonedDateTime.of(2021, 9, 21, 0, 0, 0, 0, ZoneOffset.UTC);
         localDateTime = LocalDateTime.of(2021, 9, 21, 9, 0, 0, 0);
-        date = new GregorianCalendar(2021, 8, 21).getTime();
+        date = new GregorianCalendar(2021, Calendar.SEPTEMBER, 21).getTime();
         sqlDate = new java.sql.Date(date.getTime());
     }
 
@@ -69,11 +70,5 @@ class DateTimeUtilTest {
     void localDate2SqlDate() {
         assertThat(DateTimeUtil.localDate2SqlDate(localDateTime.toLocalDate()))
                 .isEqualTo(sqlDate);
-    }
-
-    @Test
-    void defaultZoneOffset() {
-        assertThat(DateTimeUtil.defaultZoneOffset())
-                .isEqualTo(ZoneOffset.ofHours(9));
     }
 }
