@@ -37,7 +37,7 @@ public final class DateTimeUtil {
      */
     @NonNull
     public static OffsetDateTime toOffsetDateTime(@NonNull LocalDateTime from) {
-        return toZonedDateTime(from).toOffsetDateTime();
+        return from.atOffset(ZoneId.systemDefault().getRules().getOffset(from));
     }
 
     /**
