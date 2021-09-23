@@ -52,12 +52,23 @@ public final class DateTimeUtil {
 
     /**
      * java.util.DateからLocalDateへの変換
-     * @param from 変換するjava.util.DAte
+     * @param from 変換するjava.util.Date
      * @return 変換されたLocalDate
      */
     @NonNull
     public static LocalDate toLocalDate(@NonNull Date from) {
         return from.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    /**
+     * java.sql.DateからLocalDateへの変換
+     * @param from 変換するjava.sql.Date
+     * @return 変換されたLocalDate
+     */
+    @NonNull
+    public static LocalDate toLocalDate(@NonNull java.sql.Date from) {
+        // java.sql.Date#toInstantがUnsupportedExceptionになるのでこれを回避する
+        return toLocalDate(new Date(from.getTime()));
     }
 
     /**
