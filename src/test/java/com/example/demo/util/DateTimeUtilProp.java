@@ -1,16 +1,21 @@
 package com.example.demo.util;
 
 import com.example.demo.PropTestUtil;
-import net.jqwik.api.*;
-import net.jqwik.time.api.DateTimes;
+import net.jqwik.api.Arbitrary;
+import net.jqwik.api.ForAll;
+import net.jqwik.api.Property;
+import net.jqwik.api.Provide;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.function.Function;
 
+import static com.example.demo.PropTestUtil.packWithAnswer;
 import static com.example.demo.util.DateTimeUtil.*;
 import static net.jqwik.api.Tuple.Tuple2;
+import static net.jqwik.time.api.DateTimes.dateTimes;
 import static net.jqwik.time.api.Times.zoneIds;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,14 +52,14 @@ class DateTimeUtilProp {
 
     @Provide
     Arbitrary<Tuple2<LocalDateTime, ZonedDateTime>> localAndZoned() {
-        return DateTimes.dateTimes()
-                .flatMap(localDateTime -> zoneIds().map(zoneId -> Tuple.of(localDateTime, localDateToZonedDateTime(localDateTime, zoneId))));
+        return zoneIds()
+                .flatMap(zoneId -> dateTimes().map(packWithAnswer(localDateToZonedDateTime(zoneId))));
     }
 
     @Provide
     Arbitrary<Tuple2<LocalDateTime, OffsetDateTime>> localAndOffset() {
-        return DateTimes.dateTimes()
-                .flatMap(localDateTime -> zoneIds().map(zoneId -> Tuple.of(localDateTime, localDateToOffsetDateTime(localDateTime, zoneId))));
+        return zoneIds()
+                .flatMap(zoneId -> dateTimes().map(packWithAnswer(localDateToOffsetDateTime(zoneId))));
     }
 
     @Provide
@@ -67,13 +72,12 @@ class DateTimeUtilProp {
         return localAndOffset().map(PropTestUtil::reverse);
     }
 
-    static ZonedDateTime localDateToZonedDateTime(LocalDateTime localDateTime, ZoneId zoneId) {
-        return ZonedDateTime.of(localDateTime, ZoneId.systemDefault())
+    static Function<LocalDateTime, ZonedDateTime> localDateToZonedDateTime(ZoneId zoneId) {
+        return localDateTime -> ZonedDateTime.of(localDateTime, ZoneId.systemDefault())
                 .withZoneSameInstant(zoneId);
     }
 
-    static OffsetDateTime localDateToOffsetDateTime(LocalDateTime localDateTime, ZoneId zoneId) {
-        return localDateToZonedDateTime(localDateTime, zoneId).toOffsetDateTime();
+    static Function<LocalDateTime, OffsetDateTime> localDateToOffsetDateTime(ZoneId zoneId) {
+        return localDateToZonedDateTime(zoneId).andThen(ZonedDateTime::toOffsetDateTime);
     }
-
 }
