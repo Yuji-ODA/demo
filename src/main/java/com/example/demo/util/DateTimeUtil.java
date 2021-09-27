@@ -57,7 +57,7 @@ public final class DateTimeUtil {
      */
     @NonNull
     public static LocalDate toLocalDate(@NonNull Date from) {
-        return from.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return LocalDate.ofInstant(from.toInstant(), ZoneId.systemDefault());
     }
 
     /**

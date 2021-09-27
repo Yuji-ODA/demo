@@ -21,11 +21,7 @@ class BookController(private val bookService: BookService,
         get() = this[length - 1]
 
     @ModelAttribute
-    fun bookForm(): BookForm = BookForm().apply {
-        name = "新規図書"
-        price = 0.1
-    }
-
+    fun bookForm(): BookForm = BookForm("新規図書",0.1)
 }
 
 data class Hoge(val huga: Float)
