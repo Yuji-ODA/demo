@@ -2,7 +2,7 @@ package com.example.demo.app;
 
 
 import com.example.demo.Preference;
-import com.example.demo.controller.JavaBookController;
+import com.example.demo.controller.BookController;
 import com.example.demo.domain.repository.BookRepository;
 import com.example.demo.domain.service.BookService;
 import org.junit.jupiter.api.AfterEach;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith({SpringExtension.class})
-@WebMvcTest(controllers = JavaBookController.class)
+@WebMvcTest(controllers = BookController.class)
 @WithMockUser
 class BookControllerTest {
 

@@ -32,5 +32,3 @@ internal final class ApiController(private val restOperations: RestOperations) {
     @GetMapping("baka")
     fun baka() = jacksonObjectMapper().writeValueAsString(Huga.dead())
 }
-
-internal data class Class2(val s: Hoge)
