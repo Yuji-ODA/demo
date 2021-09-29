@@ -51,7 +51,10 @@ public class JavaBookController {
 
     @ModelAttribute
     public BookForm bookForm() {
-        return new BookForm("新規図書", 0.5);
+        return new BookForm() {{
+            setName("新規図書");
+            setPrice(0.5);
+        }};
     }
 
     @Data
