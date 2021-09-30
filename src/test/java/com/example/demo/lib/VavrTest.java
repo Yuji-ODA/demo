@@ -1,10 +1,8 @@
 package com.example.demo.lib;
 
 import com.example.demo.Person;
-import io.vavr.CheckedConsumer;
-import io.vavr.CheckedFunction1;
 import io.vavr.Tuple;
-import io.vavr.Tuple2;
+import io.vavr.*;
 import io.vavr.collection.CharSeq;
 import io.vavr.collection.List;
 import io.vavr.collection.Seq;
@@ -20,9 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 
 import static io.vavr.API.*;
 import static io.vavr.Patterns.*;
@@ -273,5 +269,33 @@ public class VavrTest {
     static <T> CheckedFunction1<T, Boolean> capture(CheckedConsumer<T> assertion) {
         return t -> Try.of(() -> check(assertion).apply(t))
                 .isSuccess();
+    }
+
+    @Test
+    void multiJoin() {
+        var arg1 = Option.of("hoge");
+        var arg2 = Option.<String>none();
+        var arg3 = Option.of("huga");
+
+        Function<String, String> zero = UnaryOperator.identity();
+        Function<String, Function<String, String>> concat2 = s1 -> s2 -> s1 + ' ' + s2;
+        Function<String, Function<String, Function<String, String>>> concat3 =
+                s1 -> concat2.compose(concat2.apply(s1));
+        Function<String, Function<String, Function<String, Function<String, String>>>> concat4 =
+                s1 -> concat3.compose(concat2.apply(s1));
+
+        Function<String, Function<String, Function<String, String>>> when123Exist = a1 -> a2 -> a3 -> "123Exist";
+        Function<String, Function<String, String>> when12Exist = a1 -> a2 -> "12Exist";
+        Function<String, Function<String, String>> when13Exist = a1 -> a3 -> "13Exist";
+        Function<String, Function<String, String>> when23Exist = a2 -> a3 -> "13Exist";
+        Function<String, String> when1Exist = a1 -> "1Exist";
+        Function<String, String> when2Exist = a2 -> "2Exist";
+        Function<String, String> when3Exist = a3 -> "3Exist";
+        Supplier<String> noArgs = () -> "noArgs";
+
+        var r = arg3.map(arg2.map(arg1.map(when123Exist).getOrElse(when23Exist)).getOrElse(arg1.map(when13Exist).getOrElse(when3Exist)))
+                        .getOrElse(arg2.map(arg1.map(when12Exist).getOrElse(when2Exist)).getOrElse(arg1.map(when1Exist).getOrElse(noArgs)));
+
+        System.out.println(r);
     }
 }

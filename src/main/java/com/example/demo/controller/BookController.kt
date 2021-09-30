@@ -32,30 +32,31 @@ class BookController(private val bookService: BookService,
     }
 
     @GetMapping
-    fun book(webRequest: WebRequest?, bookForm: BookForm?, model: Model): String {
+    fun book(webRequest: WebRequest?, bookForm: BookForm?, model: Model) = run {
         println(webRequest?.userPrincipal?.name)
-        return "book"
+        "book"
     }
 
     @PostMapping
     fun createNewBook(webRequest: WebRequest?, @Validated bookForm: BookForm?,
-                      bindingResult: BindingResult): ModelAndView? {
+                      bindingResult: BindingResult) = run {
         println(webRequest?.userPrincipal?.name)
 
         if (bindingResult.hasErrors()) {
-            return ModelAndView("book", HttpStatus.BAD_REQUEST)
+            ModelAndView("book", HttpStatus.BAD_REQUEST)
+        } else {
+            bookService.run(BookCommand.fromBookForm(bookForm))
+            ModelAndView("book")
         }
-        bookService.run(BookCommand.fromBookForm(bookForm))
-        return ModelAndView("book")
     }
 
     @GetMapping(path = ["list"])
-    fun bookList(webRequest: WebRequest?, model: Model?): String? {
+    fun bookList(webRequest: WebRequest?, model: Model?) = run {
         println(webRequest?.userPrincipal?.name)
 
         repository.findAll().forEach {
             println(it)
         }
-        return "book"
+        "book"
     }
 }
