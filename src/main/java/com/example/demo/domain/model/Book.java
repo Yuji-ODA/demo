@@ -1,9 +1,9 @@
 package com.example.demo.domain.model;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Value;
-import lombok.With;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "books")
 @Value
 @AllArgsConstructor
-@NoArgsConstructor(force = true) // for initial instantiation
+@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE) // for initial instantiation
 public class Book {
 
     public static Book of(String name, double price) {
@@ -26,11 +26,9 @@ public class Book {
     Long id;
 
     @Column(nullable = false)
-    @With
     String name;
 
     @Column(nullable = false)
-    @With
     Double price;
 
     @Column(nullable = false, updatable = false)

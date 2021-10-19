@@ -8,7 +8,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface MonadicSupplier<T> extends Supplier<T> {
+public interface
+
+MonadicSupplier<T> extends Supplier<T> {
 
     static <T> MonadicSupplier<T> of(Supplier<T> supplier) {
         return supplier::get;

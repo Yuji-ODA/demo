@@ -26,10 +26,7 @@ class BookController(private val bookService: BookService,
                      private var repository: BookRepository) {
 
     @ModelAttribute
-    fun bookForm() = BookForm().apply {
-        name = "新規図書"
-        price = 0.1
-    }
+    fun bookForm() = BookForm("新規図書", 0.1)
 
     @GetMapping
     fun book(webRequest: WebRequest?, bookForm: BookForm?, model: Model) = run {

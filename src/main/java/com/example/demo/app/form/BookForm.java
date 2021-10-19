@@ -1,20 +1,19 @@
 package com.example.demo.app.form;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Value;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.beans.ConstructorProperties;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Value
+@AllArgsConstructor(onConstructor = @__(@ConstructorProperties({"name", "price"})))
 public class BookForm {
 
     @Size(min = 1, max = 20)
-    private String name;
+    String name;
 
     @NotNull
-    private Double price;
+    Double price;
 }

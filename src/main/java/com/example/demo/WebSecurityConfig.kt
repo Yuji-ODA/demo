@@ -36,11 +36,12 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         // 認可の設定
         http
             .csrf()
-                .csrfTokenRepository(CookieCsrfTokenRepository())
-            .and()
+                .disable()
+//                .csrfTokenRepository(CookieCsrfTokenRepository())
+//            .and()
             .authorizeRequests()
 //                .antMatchers("/**").hasIpAddress("127.0.0.0/8")
-                .antMatchers("/**").permitAll()
+                .antMatchers("/**", "/post/**").permitAll()
                 .antMatchers("/api/**", "/console/**").permitAll()
 //                    .anyRequest().permitAll()
                 .anyRequest().authenticated()
@@ -48,6 +49,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .and()
 //                .addFilterBefore(MyFilter(), BasicAuthenticationFilter::class.java)
             .addFilterBefore(MySecurityFilter(AntPathRequestMatcher("/book/**")), BasicAuthenticationFilter::class.java)
+//            .addFilterBefore(MySecurityFilter(AntPathRequestMatcher("/post/**")), BasicAuthenticationFilter::class.java)
             .addFilterBefore(MyFilter(AntPathRequestMatcher("/")), BasicAuthenticationFilter::class.java)
 //                .exceptionHandling().authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/login"))
 //                .exceptionHandling().accessDeniedHandler { request, response, accessDeniedException ->

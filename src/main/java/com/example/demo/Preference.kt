@@ -5,13 +5,6 @@ import org.springframework.stereotype.Component
 
 @ConfigurationProperties(prefix = "preference")
 @Component
-class Preference {
+class Preference(var topPage: PageProperty?, var detailPage: PageProperty?)
 
-    var topPage: PageProperty? = null
-    var detailPage: PageProperty? = null
-
-    class PageProperty {
-        var listLength: Int = 0
-        var isChecked: Boolean = false
-    }
-}
+class PageProperty(var listLength: Int, var isChecked: Boolean)

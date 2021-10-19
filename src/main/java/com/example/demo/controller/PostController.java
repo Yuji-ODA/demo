@@ -41,10 +41,23 @@ public class PostController {
             }
         });
 
-        RequestEntity<MultiValueMap<String, Object>> requestEntity = RequestEntity
+        PersonSend person = new PersonSend(1, "小田雄二",
+                new AddressSend("埼玉県越谷市東越谷３８－２５", new ByteArrayResource("現住所はココ！！".getBytes(StandardCharsets.UTF_8)) {
+                    @Override
+                    public String getFilename() {
+                        return "data.csv";
+                    }
+                }));
+
+//        RequestEntity<MultiValueMap<String, Object>> requestEntity = RequestEntity
+//                .post(URI.create("http://localhost:8080/post"))
+//                .contentType(MediaType.MULTIPART_FORM_DATA)
+//                .body(body);
+
+        RequestEntity<PersonSend> requestEntity = RequestEntity
                 .post(URI.create("http://localhost:8080/post"))
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .body(body);
+                .body(person);
 
         ResponseEntity<String> responseEntity = restOperations.exchange(requestEntity, String.class);
         return responseEntity.getBody();
@@ -75,4 +88,23 @@ public class PostController {
         private String description;
         private MultipartFile file;
     }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PersonSend {
+        private int id;
+        private String name;
+        private AddressSend address;
+    }
+
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class AddressSend {
+        private String description;
+        private ByteArrayResource file;
+    }
+
 }

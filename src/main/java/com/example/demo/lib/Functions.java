@@ -1,7 +1,6 @@
 package com.example.demo.lib;
 
 import io.vavr.CheckedFunction0;
-import io.vavr.PartialFunction;
 import io.vavr.control.Try;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -11,11 +10,10 @@ import org.springframework.lang.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
-
-import static io.vavr.API.$;
-import static io.vavr.API.Case;
+import java.util.stream.Stream;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Functions {
@@ -90,5 +88,52 @@ public final class Functions {
         return tr -> tr.map(f);
     }
 
-    PartialFunction<Integer, String> pf = Case($(0), "zero");
+    /**
+     * ListをvalueとするMapに値を追加する
+     *
+     * @param map 値を設定するMap
+     * @param key 設定するキー
+     * @param value 追加する値
+     * @param <K> key type
+     * @param <V> value type
+     * @return map
+     */
+    public static <K, V> Map<K, List<V>> appendValue(Map<K, List<V>> map, K key, V value) {
+        List<V> list = map.getOrDefault(key, new ArrayList<>());
+        list.add(value);
+        map.put(key, list);
+        return map;
+    }
+
+    private static <K, V> BiFunction<Map<K, List<V>>, V, Map<K, List<V>>> valueAppender(K key) {
+        return (map, value) -> appendValue(map, key, value);
+    }
+
+    /**
+     * Listをvalueとする2つのMapをマージする
+     *
+     * @param map1 map
+     * @param map2 map
+     * @param <K> key type
+     * @param <V> value type
+     * @return マージしたmap
+     */
+    public static <K, V> Map<K, List<V>> mergeListMap(Map<K, List<V>> map1, Map<K, List<V>> map2) {
+        Set<K> allKeys = Stream.of(map1, map2)
+                        .map(Map::keySet)
+                        .reduce(new HashSet<>(), (acc, set) -> {
+                            acc.addAll(set);
+                            return acc;
+                        });
+
+        Map<K, List<V>> merged = new HashMap<>(map1);
+        for (K key : allKeys) {
+            if (merged.containsKey(key)) {
+                merged.get(key).addAll(map2.getOrDefault(key, Collections.emptyList()));
+            } else if (map2.containsKey(key)) {
+                merged.put(key, map2.get(key));
+            }
+        }
+        return merged;
+    }
 }
