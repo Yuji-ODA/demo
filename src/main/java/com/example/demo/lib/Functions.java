@@ -96,17 +96,18 @@ public final class Functions {
      * @param value 追加する値
      * @param <K> key type
      * @param <V> value type
-     * @return map
      */
-    public static <K, V> Map<K, List<V>> appendValue(Map<K, List<V>> map, K key, V value) {
+    public static <K, V> void appendValue(Map<K, List<V>> map, K key, V value) {
         List<V> list = map.getOrDefault(key, new ArrayList<>());
         list.add(value);
         map.put(key, list);
-        return map;
     }
 
     private static <K, V> BiFunction<Map<K, List<V>>, V, Map<K, List<V>>> valueAppender(K key) {
-        return (map, value) -> appendValue(map, key, value);
+        return (map, value) -> {
+            appendValue(map, key, value);
+            return map;
+        };
     }
 
     /**

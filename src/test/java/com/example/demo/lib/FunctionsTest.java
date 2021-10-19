@@ -132,10 +132,9 @@ class FunctionsTest {
           put("key1", list);
         }};
 
-        Map<String, List<String>> map2 = appendValue(map1, "key1", "value2");
+        appendValue(map1, "key1", "value2");
 
-        assertThat(map2).isEqualTo(map1)
-                        .containsOnly(Map.entry("key1", Arrays.asList("value1", "value2")));
+        assertThat(map1).containsOnly(Map.entry("key1", Arrays.asList("value1", "value2")));
     }
 
     @Test
