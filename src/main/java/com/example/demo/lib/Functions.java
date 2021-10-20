@@ -4,6 +4,7 @@ import io.vavr.CheckedFunction0;
 import io.vavr.control.Try;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.flywaydb.core.internal.util.Pair;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.Nullable;
 
@@ -13,6 +14,8 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -136,5 +139,37 @@ public final class Functions {
             }
         }
         return merged;
+    }
+
+    public static <T> List<List<T>> partition(List<T> list,
+                                              int targetSize) {
+        if (targetSize <= 0) {
+            throw new IllegalArgumentException("length must be positive");
+        }
+
+        return IntStream.iterate(0, i -> i + targetSize)
+                .limit((int)Math.ceil((double)list.size()/targetSize))
+                .mapToObj(i -> list.subList(i, Math.min(i + targetSize, list.size())))
+                .collect(Collectors.toList());
+    }
+
+    public static <T> Stream<List<T>> partition(Stream<T> stream, int targetSize) {
+        if (targetSize <= 0) {
+            throw new IllegalArgumentException("length must be positive");
+        }
+
+        BiFunction<List<T>, T, List<T>> addToList = (list, value) -> {
+            list.add(value);
+            return list;
+        };
+
+        Pair<Stream<List<T>>, List<T>> x = stream
+                .reduce(Pair.of(Stream.empty(), new ArrayList<>()),
+                        (acc, elem) -> acc.getRight().size() < targetSize ?
+                                Pair.of(acc.getLeft(), addToList.apply(acc.getRight(), elem)) :
+                                Pair.of(Stream.concat(acc.getLeft(), Stream.of(acc.getRight())), new ArrayList<>()),
+                        (a1, a2) -> Pair.of(Stream.concat(a1.getLeft(), a2.getLeft()), a1.getRight()));
+
+        return x.getRight().isEmpty() ? x.getLeft() : Stream.concat(x.getLeft(), Stream.of(x.getRight()));
     }
 }
