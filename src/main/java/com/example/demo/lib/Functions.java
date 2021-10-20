@@ -123,26 +123,17 @@ public final class Functions {
      * @return マージしたmap
      */
     public static <K, V> Map<K, List<V>> mergeListMap(Map<K, List<V>> map1, Map<K, List<V>> map2) {
-        Set<K> allKeys = Stream.of(map1, map2)
-                        .map(Map::keySet)
-                        .reduce(new HashSet<>(), (acc, set) -> {
-                            acc.addAll(set);
-                            return acc;
-                        });
-
         Map<K, List<V>> merged = new HashMap<>(map1);
-        for (K key : allKeys) {
-            if (merged.containsKey(key)) {
-                merged.get(key).addAll(map2.getOrDefault(key, Collections.emptyList()));
-            } else if (map2.containsKey(key)) {
-                merged.put(key, map2.get(key));
-            }
-        }
+        map2.forEach((key, value) ->
+                merged.merge(key, value, (origValue, newValue) -> {
+                    origValue.addAll(newValue);
+                    return origValue;
+                })
+        );
         return merged;
     }
 
-    public static <T> List<List<T>> partition(List<T> list,
-                                              int targetSize) {
+    public static <T> List<List<T>> partition(List<T> list, int targetSize) {
         if (targetSize <= 0) {
             throw new IllegalArgumentException("length must be positive");
         }
@@ -164,10 +155,10 @@ public final class Functions {
         };
 
         Pair<Stream<List<T>>, List<T>> x = stream
-                .reduce(Pair.of(Stream.empty(), new ArrayList<>()),
+                .reduce(Pair.of(Stream.empty(), new ArrayList<>(targetSize)),
                         (acc, elem) -> acc.getRight().size() < targetSize ?
                                 Pair.of(acc.getLeft(), addToList.apply(acc.getRight(), elem)) :
-                                Pair.of(Stream.concat(acc.getLeft(), Stream.of(acc.getRight())), new ArrayList<>()),
+                                Pair.of(Stream.concat(acc.getLeft(), Stream.of(acc.getRight())), new ArrayList<>(targetSize)),
                         (a1, a2) -> Pair.of(Stream.concat(a1.getLeft(), a2.getLeft()), a1.getRight()));
 
         return x.getRight().isEmpty() ? x.getLeft() : Stream.concat(x.getLeft(), Stream.of(x.getRight()));
