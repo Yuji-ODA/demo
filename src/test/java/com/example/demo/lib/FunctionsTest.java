@@ -15,14 +15,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.ChronoLocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
-import static com.example.demo.lib.Functions.*;
+import static com.example.demo.lib.Functions.eachProperty;
+import static com.example.demo.lib.Functions.isValidUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -120,47 +123,6 @@ class FunctionsTest {
         assertThat(trim("　ほげ　ふが　")).isEqualTo("ほげ　ふが");
         assertThat(trim("ほげ　ふが　")).isEqualTo("ほげ　ふが");
         assertThat(trim("　ほげ　ふが")).isEqualTo("ほげ　ふが");
-    }
-
-    @Test
-    void testAppendValue() {
-        List<String> list = new ArrayList<>() {{
-            add("value1");
-        }};
-
-        Map<String, List<String>> map1 = new HashMap<>() {{
-          put("key1", list);
-        }};
-
-        appendValue(map1, "key1", "value2");
-
-        assertThat(map1).containsOnly(Map.entry("key1", Arrays.asList("value1", "value2")));
-    }
-
-    @Test
-    void testMergeListMap() {
-        Map<String, List<String>> map1 = new HashMap<>() {{
-            put("key1", new ArrayList<>() {{
-                add("value1");
-            }});
-            put("key2", new ArrayList<>() {{
-                add("value3");
-            }});
-        }};
-
-        Map<String, List<String>> map2 = new HashMap<>() {{
-            put("key1", new ArrayList<>() {{
-                add("value2");
-            }});
-            put("key3", new ArrayList<>() {{
-                add("value4");
-            }});
-        }};
-
-        assertThat(mergeListMap(map1, map2))
-                .containsOnly(Map.entry("key1", Arrays.asList("value1", "value2")),
-                        Map.entry("key2", Arrays.asList("value3")),
-                        Map.entry("key3", Arrays.asList("value4")));
     }
 
     interface If {
