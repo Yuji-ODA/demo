@@ -9,6 +9,7 @@ import static com.example.demo.lib.CollectionUtil.mergeListMap;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CollectionUtilTest {
+
     @Test
     void testAppendValue() {
         List<String> list = new ArrayList<>() {{

@@ -10,12 +10,16 @@ public class IndexedValue<T> {
     long index;
     T value;
 
-    public static <T> Function<T, IndexedValue<T>> zipWithIndex(long start) {
+    public static <T> Function<T, IndexedValue<T>> withIndexFrom(long start, long step) {
         AtomicLong index = new AtomicLong(start);
-        return t -> IndexedValue.of(index.getAndIncrement(), t);
+        return t -> IndexedValue.of(index.getAndAdd(step), t);
     }
 
-    public static <T> Function<T, IndexedValue<T>> zipWithIndex() {
-        return zipWithIndex(0);
+    public static <T> Function<T, IndexedValue<T>> withIndexFrom(long start) {
+        return withIndexFrom(start, 1);
+    }
+
+    public static <T> Function<T, IndexedValue<T>> withIndex() {
+        return withIndexFrom(0);
     }
 }
