@@ -10,7 +10,8 @@ import java.util.function.Predicate;
 
 public final class FunctionalUtil {
 
-    private FunctionalUtil() {}
+    private FunctionalUtil() {
+    }
 
     public static <A, B> B foldLeft(Collection<A> collection, B identity, BiFunction<? super B, ? super A, ? extends B> f) {
         B value = identity;

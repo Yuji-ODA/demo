@@ -1,9 +1,6 @@
 package com.example.demo.domain.model;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Value;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -21,8 +18,13 @@ public class Book {
         return new Book(null, name, price, null, null);
     }
 
+    public static Book ofId(Long id) {
+        return new Book().withId(id);
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @With
     Long id;
 
     @Column(nullable = false)

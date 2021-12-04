@@ -14,7 +14,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ExtendWith(SoftAssertionsExtension.class)
-class SoftAssertionsTest {
+class SoftAssertionsJavaTest {
     @Test
     void testFailed() {
         var list = List.of(new BookDto("俺の本", 20000.0), new BookDto("君の本", 10.0));

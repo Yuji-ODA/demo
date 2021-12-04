@@ -114,7 +114,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     }
 
     fun example() {
-        val filter = object: RequestHeaderAuthenticationFilter() {}
+        val filter = RequestHeaderAuthenticationFilter()
         val auth = AuthenticationDetailsSource<HttpServletRequest, GrantedAuthoritiesContainer> { TODO("Not yet implemented") }
         filter.setAuthenticationDetailsSource(auth)
     }
