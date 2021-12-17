@@ -3,6 +3,7 @@ package com.example.demo;
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import io.vavr.jackson.datatype.VavrModule;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ public class AppConfig {
     public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
         return builder
                 .mixIn(MultipartFile.class, IgnoreType.class)
+                .modules(new VavrModule())
                 .propertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
                 .build();
     }
@@ -32,7 +34,7 @@ public class AppConfig {
     public static class IgnoreType {}
 
     @Bean
-    public GenericClass genericClass() {
+    public GenericClass<String> genericClass() {
         return new GenericClass<>(String.class);
     }
 }

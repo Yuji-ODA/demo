@@ -44,20 +44,21 @@ dependencies {
     implementation('org.codelibs:lucene-analyzers-kuromoji-ipadic-neologd:8.0.0-20190722')
     implementation('org.flywaydb:flyway-core')
     implementation 'org.apache.httpcomponents:httpclient'
-    implementation 'io.vavr:vavr:0.10.3'
-    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0'
+    implementation 'io.vavr:vavr:0.10.4'
+    implementation 'io.vavr:vavr-jackson:0.10.3'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0'
     testImplementation('org.springframework.security:spring-security-test')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.junit.jupiter:junit-jupiter-api')
-    testImplementation 'io.vavr:vavr-test:0.10.3'
+    testImplementation 'io.vavr:vavr-test:0.10.4'
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
-    testImplementation 'net.jqwik:jqwik:1.5.6'
-    testImplementation 'net.jqwik:jqwik-time:1.5.6'
+    testImplementation 'net.jqwik:jqwik:1.6.0'
+    testImplementation 'net.jqwik:jqwik-time:1.6.0'
 
-    runtimeOnly('org.webjars:jquery:3.3.1')
+    runtimeOnly('org.webjars:jquery:3.6.0')
     runtimeOnly('org.webjars.npm:d3:5.9.2')
     runtimeOnly('org.webjars:bootstrap:4.3.1')
     
