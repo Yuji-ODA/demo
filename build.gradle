@@ -1,11 +1,11 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.7'
+    id 'org.springframework.boot' version '2.6.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.20'
-    id 'org.jetbrains.kotlin.plugin.spring' version '1.5.20'
-    id 'org.jetbrains.kotlin.plugin.lombok' version '1.5.20'
-    id 'io.freefair.lombok' version '5.3.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.6.10'
+    id 'org.jetbrains.kotlin.plugin.lombok' version '1.6.10'
+    id 'io.freefair.lombok' version '6.3.0'
 }
 
 bootJar {
@@ -46,7 +46,7 @@ dependencies {
     implementation 'org.apache.httpcomponents:httpclient'
     implementation 'io.vavr:vavr:0.10.4'
     implementation 'io.vavr:vavr-jackson:0.10.3'
-    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1'
     testImplementation('org.springframework.security:spring-security-test')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.junit.jupiter:junit-jupiter-api')
@@ -55,8 +55,8 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
-    testImplementation 'net.jqwik:jqwik:1.6.0'
-    testImplementation 'net.jqwik:jqwik-time:1.6.0'
+    testImplementation 'net.jqwik:jqwik:1.6.3'
+    testImplementation 'net.jqwik:jqwik-time:1.6.3'
 
     runtimeOnly('org.webjars:jquery:3.6.0')
     runtimeOnly('org.webjars.npm:d3:5.9.2')
