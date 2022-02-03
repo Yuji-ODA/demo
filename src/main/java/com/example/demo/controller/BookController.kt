@@ -19,41 +19,42 @@ import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.ModelAndView
 
 @Controller
-@RequestMapping("book")
+@RequestMapping("books")
 class BookController(private val bookService: BookService,
                      private val preference: Preference,
                      private val objectMapper: ObjectMapper,
                      private var repository: BookRepository) {
 
-    @ModelAttribute
-    fun bookForm() = BookForm("新規図書", 0.1)
+    fun defaultBookForm() = BookForm("新規図書", 0.1)
 
     @GetMapping
-    fun book(webRequest: WebRequest?, bookForm: BookForm?, model: Model) = run {
+    fun book(webRequest: WebRequest?, model: Model): String {
         println(webRequest?.userPrincipal?.name)
-        "book"
+        model.addAttribute("books", repository.findAll())
+        model.addAttribute("bookForm", defaultBookForm())
+        return "books"
     }
 
     @PostMapping
-    fun createNewBook(webRequest: WebRequest?, @Validated bookForm: BookForm?,
-                      bindingResult: BindingResult) = run {
+    fun createNewBook(webRequest: WebRequest?, @ModelAttribute @Validated bookForm: BookForm?,
+                      bindingResult: BindingResult): ModelAndView {
         println(webRequest?.userPrincipal?.name)
 
-        if (bindingResult.hasErrors()) {
-            ModelAndView("book", HttpStatus.BAD_REQUEST)
+        return if (bindingResult.hasErrors()) {
+            ModelAndView("books", mapOf("books" to repository.findAll()) , HttpStatus.BAD_REQUEST)
         } else {
             bookService.run(BookCommand.fromBookForm(bookForm))
-            ModelAndView("book")
+            ModelAndView("redirect:/books")
         }
     }
 
     @GetMapping(path = ["list"])
-    fun bookList(webRequest: WebRequest?, model: Model?) = run {
+    fun bookList(webRequest: WebRequest?, model: Model?): String {
         println(webRequest?.userPrincipal?.name)
 
         repository.findAll().forEach {
             println(it)
         }
-        "book"
+        return "books"
     }
 }

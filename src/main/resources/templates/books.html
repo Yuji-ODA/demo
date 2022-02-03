@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<title>user form example</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=SJIS" />
 </head>
 <body>
 	<th:block th:utext="${hoge}" />
-	<form action="#" th:action="@{/book}" th:object="${bookForm}" method="post" enctype="multipart/form-data">
+	<form action="#" th:action="@{/books}" th:object="${bookForm}" method="post" enctype="multipart/form-data">
 		<table>
 			<tr>
 				<td>Name:</td>
@@ -22,5 +22,12 @@
 			</tr>
 		</table>
 	</form>
+	<table>
+	<tr th:each = "book, stat : ${books}">
+		<td th:text="${stat.index}"></td>
+		<td th:text="${book.name}"></td>
+		<td th:text="${book.price}"></td>
+	</tr>
+	</table>
 </body>
 </html>

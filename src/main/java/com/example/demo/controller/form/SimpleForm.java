@@ -1,7 +1,7 @@
 package com.example.demo.controller.form;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Value;
 import lombok.With;
@@ -10,7 +10,7 @@ import java.time.OffsetDateTime;
 
 @Value(staticConstructor = "of")
 @With
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SimpleForm<ADDRESS> {
     int id;
     String name;

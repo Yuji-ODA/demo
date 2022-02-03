@@ -1,18 +1,20 @@
 package com.example.demo.app.form;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Value;
+import lombok.With;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
-@Data
-@AllArgsConstructor
+@Value
+@With
 public class BookForm {
 
     @Size(min = 1, max = 20)
-    private String name;
+    String name;
 
     @NotNull
-    private Double price;
+    @PositiveOrZero
+    Double price;
 }

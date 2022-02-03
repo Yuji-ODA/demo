@@ -28,9 +28,11 @@ public class Book {
     Long id;
 
     @Column(nullable = false)
+    @With
     String name;
 
     @Column(nullable = false)
+    @With
     Double price;
 
     @Column(nullable = false, updatable = false)
