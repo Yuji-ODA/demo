@@ -17,4 +17,6 @@ public class BookForm {
     @NotNull
     @PositiveOrZero
     Double price;
+
+    String isbnCode;
 }

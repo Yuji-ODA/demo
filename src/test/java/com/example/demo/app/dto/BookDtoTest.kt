@@ -29,13 +29,13 @@ class BookDtoTest {
 
     @Test
     fun testSerialize() {
-        objectMapper?.writeValueAsString(BookDto("おらが村の歴史", 12000.0))
+        objectMapper?.writeValueAsString(BookDto("おらが村の歴史", 12000.0, ""))
             .let(::println)
     }
 
     @Test
     fun testDeserialize() {
-        "{\"name\":\"おらが村の歴史\",\"price\":120000.0}"
+        "{\"name\":\"おらが村の歴史\",\"price\":120000.0,\"isbn_code\":\"dkjflasdlkdsj\"}"
             .let(readValue(objectMapper, BookDto::class.java))
             .let(::println)
     }
@@ -48,7 +48,7 @@ class BookDtoTest {
 
     @Test
     fun modelMapperTest() {
-        val bookDto = objectMapper.readValue("{\"name\":\"おらが村の歴史\",\"price\":120000.0}", BookDto::class.java)
+        val bookDto = objectMapper.readValue("{\"name\":\"おらが村の歴史\",\"price\":120000.0,\"isbn_code\":\"978-4309289052\"}", BookDto::class.java)
 
         println(bookDto)
 

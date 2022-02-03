@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class SoftAssertionsJavaTest {
     @Test
     void testFailed() {
-        var list = List.of(new BookDto("俺の本", 20000.0), new BookDto("君の本", 10.0));
+        var list = List.of(new BookDto("俺の本", 20000.0, ""), new BookDto("君の本", 10.0, ""));
         assertThat(list).hasSize(2);
         assertThat(list.get(0))
                 .hasFieldOrPropertyWithValue("name", "俺の本に決まってんだろボケ")
@@ -29,7 +29,7 @@ class SoftAssertionsJavaTest {
 
     @Test
     void testSoftlyFailed() {
-        var list = List.of(new BookDto("俺の本", 20000.0), new BookDto("君の本", 10.0));
+        var list = List.of(new BookDto("俺の本", 20000.0, ""), new BookDto("君の本", 10.0, ""));
         assertSoftly(
                 softly -> {
                     softly.assertThat(list).hasSize(2);
@@ -45,7 +45,7 @@ class SoftAssertionsJavaTest {
 
     @Test
     void testSoftlyExtensionFailed(SoftAssertions softly) {
-        var list = List.of(new BookDto("俺の本", 20000.0), new BookDto("君の本", 10.0));
+        var list = List.of(new BookDto("俺の本", 20000.0, ""), new BookDto("君の本", 10.0, ""));
         softly.assertThat(list).hasSize(2);
         softly.assertThat(list.get(0))
                 .hasFieldOrPropertyWithValue("name", "俺の本ではない")
@@ -57,7 +57,7 @@ class SoftAssertionsJavaTest {
 
     @Test
     void testAllFailed() {
-        var list = List.of(new BookDto("俺の本", 20000.0), new BookDto("君の本", 10.0));
+        var list = List.of(new BookDto("俺の本", 20000.0, ""), new BookDto("君の本", 10.0, ""));
         assertAll(
                 () -> assertThat(list).hasSize(2),
                 () -> assertThat(list.get(0))
@@ -71,7 +71,7 @@ class SoftAssertionsJavaTest {
 
     @Test
     void testZipSatisfyFailed() {
-        var list = List.of(new BookDto("俺の本", 20000.0), new BookDto("君の本", 10.0));
+        var list = List.of(new BookDto("俺の本", 20000.0, ""), new BookDto("君の本", 10.0, ""));
         assertThat(list)
                 .hasSize(2)
                 .zipSatisfy(upTo(1), (actual, index) -> {

@@ -25,7 +25,7 @@ class BookController(private val bookService: BookService,
                      private val objectMapper: ObjectMapper,
                      private var repository: BookRepository) {
 
-    fun defaultBookForm() = BookForm("新規図書", 0.1)
+    fun defaultBookForm() = BookForm("新規図書", 0.1, "なんか知らん")
 
     @GetMapping
     fun book(webRequest: WebRequest?, model: Model): String {

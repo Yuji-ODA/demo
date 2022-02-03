@@ -9,7 +9,7 @@ class SoftAssertionsTest {
 
     @Test
     fun testFailed() {
-        val list = listOf(BookDto("俺の本", 20000.0), BookDto("君の本", 10.0))
+        val list = listOf(BookDto("俺の本", 20000.0, ""), BookDto("君の本", 10.0, ""))
 
         assertThat(list).hasSize(2)
         assertThat(list[0])
@@ -22,7 +22,7 @@ class SoftAssertionsTest {
 
     @Test
     fun testSoftlyFailed() {
-        val list = listOf(BookDto("俺の本", 20000.0), BookDto("君の本", 10.0))
+        val list = listOf(BookDto("俺の本", 20000.0, ""), BookDto("君の本", 10.0, ""))
 
         assertSoftly { it.apply {
             assertThat(list).hasSize(2)

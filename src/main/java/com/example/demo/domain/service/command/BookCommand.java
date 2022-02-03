@@ -13,7 +13,7 @@ public class BookCommand implements TransactionCommand<BookService> {
     private final Book book;
 
     public static BookCommand fromBookForm(BookForm bookForm) {
-        return new BookCommand(Book.of(bookForm.getName(), bookForm.getPrice()));
+        return new BookCommand(Book.of(bookForm.getName(), bookForm.getPrice(), bookForm.getIsbnCode()));
     }
 
     @Override

@@ -14,9 +14,15 @@
 				<td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">name error message</td>
 			</tr>
 			<tr>
-				<td>File:</td>
+				<td>Price:</td>
         		<td><input type="number" step="0.1" th:field="*{price}" /></td>
-          		<td th:if="${#fields.hasErrors('price')}" th:errors="*{price}">price error messame</td>
+          		<td th:if="${#fields.hasErrors('price')}" th:errors="*{price}">price error message</td>
+			</tr>
+			<tr>
+				<td>Isbn:</td>
+				<td><input type="text" step="0.1" th:field="*{isbnCode}" /></td>
+				<td th:if="${#fields.hasErrors('isbnCode')}" th:errors="*{isbnCode}">price error message</td>
+			</tr>
 			<tr>
 				<td><button type="submit">Submit post</button></td>
 			</tr>
@@ -27,6 +33,7 @@
 		<td th:text="${stat.index}"></td>
 		<td th:text="${book.name}"></td>
 		<td th:text="${book.price}"></td>
+		<td th:text="${book.isbnCode}"></td>
 	</tr>
 	</table>
 </body>

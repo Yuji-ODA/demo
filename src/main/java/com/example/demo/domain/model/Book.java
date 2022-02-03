@@ -17,12 +17,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(force = true) // for initial instantiation
 public class Book {
 
-    public static Book of(String name, double price) {
-        return new Book(null, name, price, null, null);
-    }
-
-    public static Book ofId(Long id) {
-        return new Book().withId(id);
+    public static Book of(String name, double price, String isbnCode) {
+        return new Book(null, name, price, isbnCode, null, null);
     }
 
     @Id
@@ -37,6 +33,8 @@ public class Book {
     @Column(nullable = false)
     @With
     Double price;
+
+    String isbnCode;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
