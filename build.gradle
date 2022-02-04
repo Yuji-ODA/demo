@@ -6,6 +6,7 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.spring' version '1.6.10'
     id 'org.jetbrains.kotlin.plugin.lombok' version '1.6.10'
     id 'io.freefair.lombok' version '6.3.0'
+    id 'io.github.divinespear.jpa-schema-generate' version '0.4.0'
 }
 
 bootJar {
@@ -78,3 +79,18 @@ compileKotlin {
 //        freeCompilerArgs = ["-Xjsr305=strict"]
 //    }
 //}
+
+generateSchema {
+    vendor = 'hibernate'
+    packageToScan = ['com.example.demo.domain.model']
+    databaseProductName = 'H2'
+    scriptAction = 'drop-and-create'
+    jdbcDriver = 'org.h2.Driver'
+    jdbcUrl = 'jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE'
+    jdbcUser = 'sa'
+    properties = [
+            'hibernate.dialect': 'org.hibernate.dialect.MySQL57Dialect',
+            'hibernate.physical_naming_strategy': 'org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy',
+            'hibernate.implicit_naming_strategy': 'org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy'
+    ]
+}
