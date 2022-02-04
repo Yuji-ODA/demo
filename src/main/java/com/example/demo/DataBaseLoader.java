@@ -31,11 +31,11 @@ public class DataBaseLoader {
         root = treeRepository.save(root);
 
         Tree first = Tree.of("第一子誕生")
-                .withParent(root);
+                .withParent(Tree.ofId(root.getId()));
         first = treeRepository.save(first);
 
         Tree second = Tree.of("第二子誕生")
-                .withParent(root);
+                .withParent(Tree.ofId(root.getId()));
         second = treeRepository.save(second);
     }
 }

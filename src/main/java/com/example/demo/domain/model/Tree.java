@@ -20,7 +20,7 @@ public class Tree {
         return new Tree(null, name, null, null);
     }
 
-    public static Tree ifId(long id) {
+    public static Tree ofId(long id) {
         return new Tree().withId(id);
     }
 
