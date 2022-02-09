@@ -15,9 +15,6 @@ import org.springframework.security.core.authority.GrantedAuthoritiesContainer
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.filter.OncePerRequestFilter
@@ -31,8 +28,6 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
 
-        this.authenticationManager()
-
         // 認可の設定
         http
             .csrf()
@@ -40,17 +35,20 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 //                .csrfTokenRepository(CookieCsrfTokenRepository())
 //            .and()
             .authorizeRequests()
+//                .anyRequest().permitAll()
 //                .antMatchers("/**").hasIpAddress("127.0.0.0/8")
-                .antMatchers("/**", "/post/**").permitAll()
-                .antMatchers("/api/**", "/console/**").permitAll()
+//                .antMatchers("/**", "/post/**").permitAll()
+                .antMatchers("/api/**", "/h2-console/**").permitAll()
 //                    .anyRequest().permitAll()
-                .anyRequest().authenticated()
+//                .anyRequest().authenticated()
 //                    .anyRequest().hasAnyRole("USER") // それ以外は全て認証無しの場合アクセス不許可
             .and()
+            .antMatcher("/h2-console/**").headers().frameOptions().disable()
+            .and()
 //                .addFilterBefore(MyFilter(), BasicAuthenticationFilter::class.java)
-            .addFilterBefore(MySecurityFilter(AntPathRequestMatcher("/book/**")), BasicAuthenticationFilter::class.java)
+//            .addFilterBefore(MySecurityFilter(AntPathRequestMatcher("/book/**")), BasicAuthenticationFilter::class.java)
 //            .addFilterBefore(MySecurityFilter(AntPathRequestMatcher("/post/**")), BasicAuthenticationFilter::class.java)
-            .addFilterBefore(MyFilter(AntPathRequestMatcher("/")), BasicAuthenticationFilter::class.java)
+//            .addFilterBefore(MyFilter(AntPathRequestMatcher("/")), BasicAuthenticationFilter::class.java)
 //                .exceptionHandling().authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/login"))
 //                .exceptionHandling().accessDeniedHandler { request, response, accessDeniedException ->
 //                    response.sendRedirect("http://www.yahoo.co.jp")

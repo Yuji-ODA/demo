@@ -11,9 +11,8 @@ import org.springframework.context.annotation.Profile
 class LocalWebConfig {
 
     @Bean
-    fun h2servletRegistration(): ServletRegistrationBean<*> {
-        val registrationBean = ServletRegistrationBean(WebServlet())
-        registrationBean.addUrlMappings("/console/*")
-        return registrationBean
-    }
+    fun h2servletRegistration(): ServletRegistrationBean<*> =
+        ServletRegistrationBean(WebServlet()).apply {
+            addUrlMappings("/h2-console/*")
+        }
 }
