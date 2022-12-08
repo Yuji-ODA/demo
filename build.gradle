@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.6.3'
+    id 'org.springframework.boot' version '2.7.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.6.10'
@@ -7,12 +7,13 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.lombok' version '1.6.10'
     id 'io.freefair.lombok' version '6.3.0'
     id 'io.github.divinespear.jpa-schema-generate' version '0.4.0'
+    id 'project-report'
 }
 
-bootJar {
-    baseName = 'spring-boot-demo'
-    version =  '0.1.0'
-}
+//bootJar {
+//    baseName = 'spring-boot-demo'
+//    version =  '0.1.0'
+//}
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
@@ -47,18 +48,17 @@ dependencies {
     implementation 'org.apache.httpcomponents:httpclient'
     implementation 'io.vavr:vavr:0.10.4'
     implementation 'io.vavr:vavr-jackson:0.10.3'
-    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1'
-    implementation 'org.modelmapper.extensions:modelmapper-spring:3.0.0'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.13.2'
+    implementation 'org.modelmapper.extensions:modelmapper-spring:3.1.0'
     testImplementation('org.springframework.security:spring-security-test')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.junit.jupiter:junit-jupiter-api')
     testImplementation 'io.vavr:vavr-test:0.10.4'
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
-    testImplementation 'net.jqwik:jqwik:1.6.3'
-    testImplementation 'net.jqwik:jqwik-time:1.6.3'
+    testImplementation 'net.jqwik:jqwik:1.6.5'
+    testImplementation 'net.jqwik:jqwik-time:1.6.5'
 
     runtimeOnly('org.webjars:jquery:3.6.0')
     runtimeOnly('org.webjars.npm:d3:5.9.2')
@@ -67,18 +67,18 @@ dependencies {
 }
 compileKotlin {
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
         freeCompilerArgs = ["-Xjsr305=strict"]
     }
     kotlinOptions.useIR = true
 }
 
-//compileTestKotlin {
-//    kotlinOptions {
-//        jvmTarget = "11"
-//        freeCompilerArgs = ["-Xjsr305=strict"]
-//    }
-//}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "17"
+        freeCompilerArgs = ["-Xjsr305=strict"]
+    }
+}
 
 generateSchema {
     vendor = 'hibernate'

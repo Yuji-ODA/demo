@@ -1,17 +1,22 @@
 package com.example.demo;
 
 import com.example.demo.lib.Huga;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class HogeTest {
     @Test
@@ -30,7 +35,9 @@ class HogeTest {
         System.out.println(Huga.Companion.dead());
         System.out.println(Huga.Companion.dead().getBeType());
 
-        new ObjectMapper().writeValue(System.out, Huga.Companion.dead());
+//        new ObjectMapper().writeValue(System.out, Huga.Companion.dead());
+
+        assertThat(1).isEqualTo(1);
     }
 
     @DisplayName("翌日テスト")
@@ -45,5 +52,18 @@ class HogeTest {
 
         // then
         assertThat(actual).isEqualTo(expected);
+    }
+
+    static Stream<Arguments> intListProvider() {
+        return Stream.of(
+                arguments(Arrays.asList(1, 2, 3)),
+                arguments(Arrays.asList(4, 5, 5))
+        );
+    }
+
+    @ParameterizedTest(name = "引く数が{0}である")
+    @MethodSource("com.example.demo.HogeTest#intListProvider")
+    void arrayTest(List<Integer> ints) {
+        System.out.println(ints);
     }
 }

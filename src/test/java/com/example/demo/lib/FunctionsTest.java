@@ -10,6 +10,10 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Range;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,8 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
-import static com.example.demo.lib.Functions.eachProperty;
-import static com.example.demo.lib.Functions.isValidUUID;
+import static com.example.demo.lib.Functions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -157,5 +160,19 @@ class FunctionsTest {
 
         Range<ChronoLocalDateTime<?>> range3 = Range.from(inclusive(LocalDateTime.now()))
                 .to(unbounded());
+    }
+
+    @Test
+    void testToLineIterable() {
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream("asasas\nasfdsdfamsld\nefjdjfs".getBytes())))) {
+            for (String line : toLineIterable(reader)) {
+                System.out.println("line: " + line);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

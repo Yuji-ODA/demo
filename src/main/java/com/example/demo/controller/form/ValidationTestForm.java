@@ -1,6 +1,7 @@
 package com.example.demo.controller.form;
 
 import com.example.demo.controller.validation.ValidationTestFormValidator;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
@@ -8,6 +9,7 @@ import org.hibernate.validator.constraints.Range;
 import javax.validation.constraints.NotNull;
 
 @Data
+@AllArgsConstructor
 @ValidationTestFormValidator
 public class ValidationTestForm {
     @Length(min = 1, max = 10)

@@ -15,7 +15,7 @@ public class DataBaseLoader {
     private final String ddlAuto;
     private final TreeRepository treeRepository;
 
-    public DataBaseLoader(@Value("${spring.jpa.hibernate.ddl-auto}") String ddlAuto, TreeRepository treeRepository) {
+    public DataBaseLoader(@Value("${spring.jpa.hibernate.ddl-auto:none}") String ddlAuto, TreeRepository treeRepository) {
         this.ddlAuto = ddlAuto;
         this.treeRepository = treeRepository;
     }

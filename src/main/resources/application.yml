@@ -14,7 +14,7 @@ spring:
 preference:
   top-page:
     list-length: 10
-    checkd: true
+    checked: true
   detail-page:
     list-length: 5
     checked: false

@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.lang.Nullable;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -84,5 +86,35 @@ public final class Functions {
 
     private static <T, R> Function<Try<T>, Try<R>> liftTry(Function<? super T, ? extends R> f) {
         return tr -> tr.map(f);
+    }
+
+    public static Iterable<String> toLineIterable(BufferedReader reader) {
+
+        try {
+            String first = reader.readLine();
+
+            return () -> new Iterator<>() {
+
+                String cache = first;
+
+                @Override
+                public boolean hasNext() {
+                    return cache != null;
+                }
+
+                @Override
+                public String next() {
+                    try {
+                        String ret = cache;
+                        cache = reader.readLine();
+                        return ret;
+                    } catch (IOException e) {
+                        return null;
+                    }
+                }
+            };
+        } catch (IOException e2) {
+            return Collections::emptyIterator;
+        }
     }
 }

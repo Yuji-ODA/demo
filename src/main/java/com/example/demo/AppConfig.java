@@ -2,7 +2,7 @@ package com.example.demo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.module.kotlin.KotlinModule;
 import io.vavr.jackson.datatype.VavrModule;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -20,7 +20,7 @@ public class AppConfig {
         return builder
                 .mixIn(MultipartFile.class, IgnoreType.class)
                 .modules(new VavrModule(), new KotlinModule.Builder().build())
-                .propertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
+                .propertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
                 .build();
     }
 
