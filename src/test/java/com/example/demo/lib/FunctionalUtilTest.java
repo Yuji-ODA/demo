@@ -1,6 +1,5 @@
 package com.example.demo.lib;
 
-import lombok.Value;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static com.example.demo.lib.FunctionalUtil.isIdentical;
+import static com.example.demo.lib.FunctionalUtil.isIdenticalTo;
 import static java.util.function.Predicate.isEqual;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -73,12 +72,11 @@ class FunctionalUtilTest {
                 .isPresent()
                 .contains(huga1);
 
-        assertThat(Stream.of(hoge, huga1).filter(isIdentical(huga2)).findFirst())
+        assertThat(Stream.of(hoge, huga1).filter(isIdenticalTo(huga2)).findFirst())
                 .isEmpty();
     }
 
-    @Value
-    static class Hoge {
-        String huga;
-    }
+    record Hoge(
+            String huga
+    ) {}
 }

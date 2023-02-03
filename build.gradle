@@ -1,6 +1,6 @@
 plugins {
     id 'org.springframework.boot' version '2.7.0'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.13.RELEASE'
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.6.10'
     id 'org.jetbrains.kotlin.plugin.spring' version '1.6.10'
@@ -54,6 +54,7 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.junit.jupiter:junit-jupiter-api')
     testImplementation 'io.vavr:vavr-test:0.10.4'
+    testImplementation 'org.projectlombok:lombok:1.18.22'
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
@@ -63,14 +64,17 @@ dependencies {
     runtimeOnly('org.webjars:jquery:3.6.0')
     runtimeOnly('org.webjars.npm:d3:5.9.2')
     runtimeOnly('org.webjars:bootstrap:4.3.1')
-    
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
 }
 compileKotlin {
     kotlinOptions {
         jvmTarget = "17"
         freeCompilerArgs = ["-Xjsr305=strict"]
     }
-    kotlinOptions.useIR = true
+//    kotlinOptions.useIR = true
 }
 
 compileTestKotlin {
@@ -93,4 +97,8 @@ generateSchema {
             'hibernate.physical_naming_strategy': 'org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy',
             'hibernate.implicit_naming_strategy': 'org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy'
     ]
+}
+
+wrapper {
+    gradleVersion = '7.4'
 }

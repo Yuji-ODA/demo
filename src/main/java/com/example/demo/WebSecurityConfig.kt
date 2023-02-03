@@ -1,50 +1,58 @@
 package com.example.demo
 
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
-import org.springframework.security.authentication.AbstractAuthenticationToken
-import org.springframework.security.authentication.AuthenticationDetailsSource
-import org.springframework.security.authentication.AuthenticationProvider
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.authentication.*
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.GrantedAuthoritiesContainer
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.filter.OncePerRequestFilter
 import java.util.*
-import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+@Configuration
 @EnableWebSecurity(debug = true)
-class WebSecurityConfig : WebSecurityConfigurerAdapter() {
-    @Throws(Exception::class)
-    override fun configure(http: HttpSecurity) {
+class WebSecurityConfig {
 
+    @Bean
+    fun webSecurityCustomizer() = WebSecurityCustomizer {
+        it.ignoring().antMatchers("/img/**", "/js/**", "/css/**")
+    }
+
+    @Bean
+    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain =
         // 認可の設定
         http
-            .csrf()
-                .disable()
-//                .csrfTokenRepository(CookieCsrfTokenRepository())
-//            .and()
-            .authorizeRequests()
+            .csrf { it.disable() }
+//            .csrf { it.csrfTokenRepository(CookieCsrfTokenRepository()) }
+            .authorizeHttpRequests {
+                it.antMatchers("/api/**", "/h2-console/**", "/login").permitAll()
+                    .anyRequest().authenticated()
+            }
+            .antMatcher("/h2-console/**").headers { it.frameOptions().disable() }
+            .addFilterBefore(securityFilter(), BasicAuthenticationFilter::class.java)
+            .exceptionHandling {
+                it.authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/login"))
+            }
 //                .anyRequest().permitAll()
 //                .antMatchers("/**").hasIpAddress("127.0.0.0/8")
 //                .antMatchers("/**", "/post/**").permitAll()
-                .antMatchers("/api/**", "/h2-console/**").permitAll()
 //                    .anyRequest().permitAll()
 //                .anyRequest().authenticated()
 //                    .anyRequest().hasAnyRole("USER") // それ以外は全て認証無しの場合アクセス不許可
-            .and()
-            .antMatcher("/h2-console/**").headers().frameOptions().disable()
-            .and()
 //                .addFilterBefore(MyFilter(), BasicAuthenticationFilter::class.java)
 //            .addFilterBefore(MySecurityFilter(AntPathRequestMatcher("/book/**")), BasicAuthenticationFilter::class.java)
 //            .addFilterBefore(MySecurityFilter(AntPathRequestMatcher("/post/**")), BasicAuthenticationFilter::class.java)
@@ -57,8 +65,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 //                .and()
 //                .headers().frameOptions().disable()
 //                .and()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-    }
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .build()
 
 //    @Configuration
 //    open class FilterConf {
@@ -71,44 +79,36 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 //        }
 //    }
 //
-    override fun configure(auth: AuthenticationManagerBuilder?) {
-        auth?.authenticationProvider(object: AuthenticationProvider {
-            override fun authenticate(authentication: Authentication?): Authentication? {
-                return authentication?.apply {
-                    isAuthenticated = true
-                }
-            }
 
+    fun authenticationManager(): AuthenticationManager {
+        val provider = object : AuthenticationProvider {
+            override fun authenticate(authentication: Authentication?): Authentication? = authentication
+                ?.apply { isAuthenticated = true }
             override fun supports(authentication: Class<*>?): Boolean = true
-        })
+        }
+
+        return ProviderManager(provider)
     }
 
-    class MyFilter(private val requestMatcher: RequestMatcher = RequestMatcher { true }) : OncePerRequestFilter() {
-        override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
-            if (requestMatcher.matches(request)) {
-                val authentication = MyAuthentication("ユーザ", Collections.singletonList(SimpleGrantedAuthority("ROLE_USER")))
-//            authentication.isAuthenticated = true
-                SecurityContextHolder.getContext().authentication = authentication
-            }
+    fun securityFilter() = MySecurityFilter(authenticationManager = authenticationManager())
 
-            filterChain.doFilter(request, response)
-        }
+    class MySecurityFilter(private val requestMatcher: RequestMatcher = RequestMatcher { true }, authenticationManager: AuthenticationManager) : AbstractAuthenticationProcessingFilter(requestMatcher, authenticationManager) {
+
+        override fun attemptAuthentication(request: HttpServletRequest?, response: HttpServletResponse?): Authentication =
+            MyAuthentication("ユーザ", Collections.singletonList(SimpleGrantedAuthority("ROLE_USER")))
+                .apply { details = authenticationDetailsSource.buildDetails(request) }
+                .run { authenticationManager.authenticate(this) }
     }
 
-    class MySecurityFilter(private val requestMatcher: RequestMatcher = RequestMatcher { true }) : OncePerRequestFilter() {
-        override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
-
-//            throw object: AuthenticationException("forbidden") {}
-//            throw ForbiddenException("forbidden")
-
-            if (requestMatcher.matches(request)) {
-                val authentication = MyAuthentication("ユーザ", Collections.singletonList(SimpleGrantedAuthority("ROLE_USER")))
-//            authentication.isAuthenticated = true
-                SecurityContextHolder.getContext().authentication = authentication
-            }
-
-            filterChain.doFilter(request, response)
+    class MyPreauthFilter : RequestHeaderAuthenticationFilter() {
+        override fun getPreAuthenticatedPrincipal(request: HttpServletRequest?): Any {
+            TODO("Not yet implemented")
         }
+
+        override fun getPreAuthenticatedCredentials(request: HttpServletRequest?): Any {
+            TODO("Not yet implemented")
+        }
+
     }
 
     fun example() {

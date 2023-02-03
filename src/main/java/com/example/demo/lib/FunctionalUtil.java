@@ -1,5 +1,7 @@
 package com.example.demo.lib;
 
+import io.vavr.CheckedFunction1;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -76,7 +78,21 @@ public final class FunctionalUtil {
         return f -> f.apply(t);
     }
 
-    public static Predicate<Object> isIdentical(Object o) {
+    public static Predicate<Object> isIdenticalTo(Object o) {
         return supplied -> o == supplied;
+    }
+
+    public static <T, R> Function<T, R> toUnchecked(CheckedFunction1<? super T, ? extends R> checkedFunction1) {
+        return toUnchecked(checkedFunction1, RuntimeException::new);
+    }
+    public static <T, R> Function<T, R> toUnchecked(CheckedFunction1<? super T, ? extends R> checkedFunction1,
+                                                    Function<? super Throwable, ? extends RuntimeException> f) {
+        return t -> {
+            try {
+                return checkedFunction1.apply(t);
+            } catch (Throwable ex) {
+                throw f.apply(ex);
+            }
+        };
     }
 }

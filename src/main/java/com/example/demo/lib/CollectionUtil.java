@@ -2,16 +2,14 @@ package com.example.demo.lib;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.flywaydb.core.internal.util.Pair;
+import org.springframework.data.util.Pair;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CollectionUtil {
@@ -93,7 +91,7 @@ public final class CollectionUtil {
         return IntStream.iterate(0, i -> i + targetSize)
                 .limit((int)Math.ceil((double)list.size()/targetSize))
                 .mapToObj(i -> list.subList(i, Math.min(i + targetSize, list.size())))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static <T> Stream<List<T>> partition(Stream<T> stream, int targetSize) {
@@ -108,11 +106,27 @@ public final class CollectionUtil {
 
         Pair<Stream<List<T>>, List<T>> x = stream
                 .reduce(Pair.of(Stream.empty(), new ArrayList<>(targetSize)),
-                        (acc, elem) -> acc.getRight().size() < targetSize ?
-                                Pair.of(acc.getLeft(), addToList.apply(acc.getRight(), elem)) :
-                                Pair.of(Stream.concat(acc.getLeft(), Stream.of(acc.getRight())), new ArrayList<>(targetSize)),
-                        (a1, a2) -> Pair.of(Stream.concat(a1.getLeft(), a2.getLeft()), a1.getRight()));
+                        (acc, elem) -> acc.getSecond().size() < targetSize ?
+                                Pair.of(acc.getFirst(), addToList.apply(acc.getSecond(), elem)) :
+                                Pair.of(Stream.concat(acc.getFirst(), Stream.of(acc.getSecond())), new ArrayList<>(targetSize)),
+                        (a1, a2) -> Pair.of(Stream.concat(a1.getFirst(), a2.getFirst()), a1.getSecond()));
 
-        return x.getRight().isEmpty() ? x.getLeft() : Stream.concat(x.getLeft(), Stream.of(x.getRight()));
+        return x.getSecond().isEmpty() ? x.getFirst() : Stream.concat(x.getFirst(), Stream.of(x.getSecond()));
+    }
+
+    public static <T> Stream<T> iterableToStream(Iterable<T> iterable) {
+        return StreamSupport.stream(iterable.spliterator(), false);
+    }
+
+    public static <T> Stream<T> iteratorToStream(Iterator<T> iterator) {
+        return iterableToStream(() -> iterator);
+    }
+
+    public static Iterable<Integer> range(int start, int stop) {
+        return IntStream.range(start, stop)::iterator;
+    }
+
+    public static Iterable<Long> range(long start, long stop) {
+        return LongStream.range(start, stop)::iterator;
     }
 }

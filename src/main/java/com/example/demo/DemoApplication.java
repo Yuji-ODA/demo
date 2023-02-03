@@ -10,13 +10,13 @@ public class DemoApplication {
 
 	public static void main(String[] args) throws Exception {
 
-		Option<Integer> huga = unit(10);
-
-		Option<Integer> foo = huga.map(i -> i * 2);
-
-		System.out.println(foo);
-
-		Math.random();
+//		Option<Integer> huga = unit(10);
+//
+//		Option<Integer> foo = huga.map(i -> i * 2);
+//
+//		System.out.println(foo);
+//
+//		Math.random();
 
 		SpringApplication.run(DemoApplication.class, args);
 	}

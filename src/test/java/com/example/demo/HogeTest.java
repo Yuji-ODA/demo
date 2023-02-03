@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -65,5 +66,19 @@ class HogeTest {
     @MethodSource("com.example.demo.HogeTest#intListProvider")
     void arrayTest(List<Integer> ints) {
         System.out.println(ints);
+    }
+
+    @Test
+    void t() {
+        var ucb = UriComponentsBuilder.fromHttpUrl("http://localhost:8080")
+                .queryParam("hoge", "huga", "foo", "bar")
+                .queryParam("日本語", "ムズカシイネ")
+                .pathSegment("ika", "げそ", "umai.html")
+                .fragment("せやろか？");
+
+        System.out.println(ucb.build().toUriString());
+
+        System.out.println(ucb.encode().build().toUriString());
+        System.out.println(ucb.encode().encode().build().toUriString());
     }
 }
