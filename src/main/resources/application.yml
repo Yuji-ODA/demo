@@ -26,3 +26,6 @@ logging:
         security:
           web:
             FilterChainProxy=DEBUG:
+
+public-key: classpath:jwt.pub.key
+private-key: classpath:jwt.key.p1

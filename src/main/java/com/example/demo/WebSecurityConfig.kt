@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.web.bind.annotation.ResponseStatus
 import java.util.*
@@ -36,8 +37,7 @@ class WebSecurityConfig {
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain =
         // 認可の設定
         http
-            .csrf { it.disable() }
-//            .csrf { it.csrfTokenRepository(CookieCsrfTokenRepository()) }
+            .csrf { it.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) }
             .authorizeHttpRequests {
                 it.antMatchers("/api/**", "/h2-console/**", "/login").permitAll()
                     .anyRequest().authenticated()
