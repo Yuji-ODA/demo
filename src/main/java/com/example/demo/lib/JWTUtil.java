@@ -31,7 +31,7 @@ public final class JWTUtil {
              Stream<String> lines = reader.lines()) {
 
             String pem = lines.filter(line -> !line.matches("-----(BEGIN|END) PUBLIC KEY-----"))
-                    .map(line -> line.replaceAll("[\\r\\n]", ""))
+                    .map(String::trim)
                     .collect(Collectors.joining());
 
             byte[] encoded = Base64.getDecoder().decode(pem);
@@ -47,7 +47,7 @@ public final class JWTUtil {
              Stream<String> lines = reader.lines()) {
 
             String pem = lines.filter(line -> !line.matches("-----(BEGIN|END) RSA PRIVATE KEY-----"))
-                    .map(line -> line.replaceAll("[\\r\\n]", ""))
+                    .map(String::trim)
                     .collect(Collectors.joining());
 
             byte[] encoded = Base64.getDecoder().decode(pem);
