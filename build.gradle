@@ -61,12 +61,15 @@ dependencies {
     testImplementation 'net.jqwik:jqwik:1.6.5'
     testImplementation 'net.jqwik:jqwik-time:1.6.5'
 
-    runtimeOnly('org.webjars:jquery:3.6.0')
+    runtimeOnly('org.webjars:jquery:3.6.2')
     runtimeOnly('org.webjars.npm:d3:5.9.2')
     runtimeOnly('org.webjars:bootstrap:4.3.1')
 
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.76'
+    implementation 'com.auth0:java-jwt:4.4.0'
 
 }
 compileKotlin {
@@ -100,5 +103,5 @@ generateSchema {
 }
 
 wrapper {
-    gradleVersion = '7.4'
+    gradleVersion = '8.0.2'
 }
