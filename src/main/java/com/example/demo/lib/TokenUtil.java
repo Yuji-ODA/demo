@@ -38,7 +38,7 @@ public final class TokenUtil {
              BufferedReader reader = new BufferedReader(new InputStreamReader(in));
              Stream<String> lines = reader.lines()) {
 
-            String pem = lines.filter(line -> !line.matches("-----(BEGIN|END) RSA PRIVATE KEY-----"))
+            String pem = lines.filter(line -> !line.matches("-----(BEGIN|END)( RSA)? PRIVATE KEY-----"))
                     .collect(Collectors.joining());
             byte[] encoded = Base64.getDecoder().decode(pem);
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
